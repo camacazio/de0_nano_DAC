@@ -1,0 +1,91 @@
+Restore Archived Project report for DE0_myfirstfpga
+Tue May 17 08:46:35 2016
+Quartus Prime Version 15.1.2 Build 193 02/01/2016 SJ Lite Edition
+
+
+---------------------
+; Table of Contents ;
+---------------------
+  1. Legal Notice
+  2. Restore Archived Project Summary
+  3. Restore Archived Project Messages
+  4. Files Restored
+  5. Files Not Restored
+
+
+
+----------------
+; Legal Notice ;
+----------------
+Copyright (C) 1991-2016 Altera Corporation. All rights reserved.
+Your use of Altera Corporation's design tools, logic functions 
+and other software and tools, and its AMPP partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Altera Program License 
+Subscription Agreement, the Altera Quartus Prime License Agreement,
+the Altera MegaCore Function License Agreement, or other 
+applicable license agreement, including, without limitation, 
+that your use is for the sole purpose of programming logic 
+devices manufactured by Altera and sold by Altera or its 
+authorized distributors.  Please refer to the applicable 
+agreement for further details.
+
+
+
++-------------------------------------------------------------------------+
+; Restore Archived Project Summary                                        ;
++---------------------------------+---------------------------------------+
+; Restore Archived Project Status ; Successful - Tue May 17 08:46:35 2016 ;
+; Revision Name                   ; DE0_myfirstfpga                       ;
+; Top-level Entity Name           ; DE0_myfirstfpga                       ;
+; Family                          ; Cyclone IV E                          ;
++---------------------------------+---------------------------------------+
+
+
++-----------------------------------+
+; Restore Archived Project Messages ;
++-----------------------------------+
+Info: Successfully restored 'C:/Users/bowler/Documents/Altera/DE0_12bitDAC/DE0_myfirstfpga_tmp_archive.qar' into the 'C:/Users/bowler/Documents/Altera/DE0_12bitDAC_controller' directory
+Info: Generated report 'DE0_myfirstfpga.restore.rpt'
+
+
++-------------------------+
+; Files Restored          ;
++-------------------------+
+; File Name               ;
++-------------------------+
+; qar_info.json           ;
+; DE0_myfirstfpga.bdf     ;
+; DE0_myfirstfpga.out.sdc ;
+; DE0_myfirstfpga.qpf     ;
+; DE0_myfirstfpga.qsf     ;
+; FT245_communication.vhd ;
+; altpll_myfirstfpga.bsf  ;
+; altpll_myfirstfpga.cmp  ;
+; altpll_myfirstfpga.ppf  ;
+; altpll_myfirstfpga.qip  ;
+; altpll_myfirstfpga.vhd  ;
+; channel_signals.vhd     ;
+; comm_pll.bsf            ;
+; comm_pll.cmp            ;
+; comm_pll.ppf            ;
+; comm_pll.qip            ;
+; comm_pll.vhd            ;
+; mux_myfirstfpga.bsf     ;
+; mux_myfirstfpga.cmp     ;
+; mux_myfirstfpga.qip     ;
+; mux_myfirstfpga.vhd     ;
+; output_to_DAC.vhd       ;
+; assignment_defaults.qdf ;
++-------------------------+
+
+
++--------------------+
+; Files Not Restored ;
++--------------------+
+; File Name          ;
++--------------------+
+
+

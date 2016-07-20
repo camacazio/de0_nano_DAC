@@ -1,0 +1,7 @@
+{
+	"common_dir" : "C:/Users/bowler/Documents/Altera/DE0_12bitDAC/",
+	"acds_version" : "Version 15.1.2",
+	"platform" : "windows",
+	"os" : "Windows 7",
+	"qpf" : "DE0_myfirstfpga.qpf"
+}

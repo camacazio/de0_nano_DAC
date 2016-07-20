@@ -1,0 +1,35 @@
+
+State Machine - |DE0_myfirstfpga|output_to_12bitDAC:DAC1_inst|dac_read_mode
+Name dac_read_mode.NONE dac_read_mode.DONE dac_read_mode.READ_dV dac_read_mode.READ_dV_float dac_read_mode.READ_V dac_read_mode.READ_T 
+dac_read_mode.READ_T 0 0 0 0 0 0 
+dac_read_mode.READ_V 0 0 0 0 1 1 
+dac_read_mode.READ_dV_float 0 0 0 1 0 1 
+dac_read_mode.READ_dV 0 0 1 0 0 1 
+dac_read_mode.DONE 0 1 0 0 0 1 
+dac_read_mode.NONE 1 0 0 0 0 1 
+
+State Machine - |DE0_myfirstfpga|FT245Comm:comm_inst|comm_state
+Name comm_state.RECEIVE comm_state.IDLE comm_state.RESET 
+comm_state.RESET 0 0 0 
+comm_state.IDLE 0 1 1 
+comm_state.RECEIVE 1 0 1 
+
+State Machine - |DE0_myfirstfpga|FT245Comm:comm_inst|command
+Name command.CHANNEL1 command.SETADDR2 command.SETADDR1 command.WRITE2 command.WRITE1 command.BURST2 command.BURST1 command.NONE 
+command.NONE 0 0 0 0 0 0 0 0 
+command.BURST1 0 0 0 0 0 0 1 1 
+command.BURST2 0 0 0 0 0 1 0 1 
+command.WRITE1 0 0 0 0 1 0 0 1 
+command.WRITE2 0 0 0 1 0 0 0 1 
+command.SETADDR1 0 0 1 0 0 0 0 1 
+command.SETADDR2 0 1 0 0 0 0 0 1 
+command.CHANNEL1 1 0 0 0 0 0 0 1 
+
+State Machine - |DE0_myfirstfpga|output_to_12bitDAC:DAC0_inst|dac_read_mode
+Name dac_read_mode.NONE dac_read_mode.DONE dac_read_mode.READ_dV dac_read_mode.READ_dV_float dac_read_mode.READ_V dac_read_mode.READ_T 
+dac_read_mode.READ_T 0 0 0 0 0 0 
+dac_read_mode.READ_V 0 0 0 0 1 1 
+dac_read_mode.READ_dV_float 0 0 0 1 0 1 
+dac_read_mode.READ_dV 0 0 1 0 0 1 
+dac_read_mode.DONE 0 1 0 0 0 1 
+dac_read_mode.NONE 1 0 0 0 0 1 

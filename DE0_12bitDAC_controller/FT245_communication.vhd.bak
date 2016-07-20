@@ -1,0 +1,216 @@
+----------------------------------------------------------------------------------
+-- Communication with FT245 for USB to 8-bit parrallel interface
+-- Handles communication with computer and sends data to rest of system
+----------------------------------------------------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+	
+entity FT245Comm is
+
+	Port ( 
+		-- Clocks
+		clk_comm			: in 		std_logic;
+		
+		-- USB to FIFO communication: FT245RL
+		comm_data		: in		std_logic_vector(7 downto 0);		-- Unidirectional data bus
+		comm_rxfl		: in		std_logic;								-- FIFO has data for read, default '1'
+		comm_rdl			: out		std_logic;								-- Fetch from FIFO, default '1'
+		
+		-- Data output word
+		data_q			: out		std_logic_vector(15 downto 0);	-- Word for the rest of the system
+		channel			: out		std_logic_vector(7 downto 0)		-- Choice of where to route data in the FPGA
+	);
+	
+end entity;
+
+architecture Behavioral of FT245Comm is
+	----------------------------------------------------------------------------------
+	-- SIGNALS
+	----------------------------------------------------------------------------------	
+
+	-- Internal copy of word of data
+	signal data_q_i			: std_logic_vector(15 downto 0) := (others => '0');
+	-- Internal copy of channel to receive data
+	signal channel_i			: std_logic_vector(7 downto 0) := (others => '0');
+	-- Internal triggers for communication
+	signal comm_rdl_i			: std_logic := '1'; 	-- 1 => do not read data from FIFO
+	
+	-- Registry data; temporarily, this is unused until writing to memory is available
+	signal data_reg_length	: std_logic_vector(15 downto 0) := (others => '0');
+	signal addr_comm			: std_logic_vector(15 downto 0) := (others => '0');
+	
+	----------------------------------------------------------------------------------
+	-- BEGIN
+	----------------------------------------------------------------------------------
+begin
+	
+	-- Latch data
+	data_q		<= data_q_i;
+	-- Latch communication channel
+	channel		<= channel_i;
+	-- Latch "reading" from the FIFO
+	comm_rdl		<= comm_rdl_i;
+			
+	process (clk_comm, comm_rxfl)
+		
+		-- Define FSM
+		type 		COMM_STATES 		is (RESET, IDLE, RECEIVE);
+		-- Command states have multiple copies of commands for grabbing 1 byte at a time
+		type		COMMANDS				is (NONE, BURST1, BURST2, WRITE1, WRITE2, SETLEN1, SETLEN2, CHANNEL1);
+		
+		variable comm_state			: COMM_STATES := RESET;
+		variable	command				: COMMANDS := NONE;
+		
+		-- data byte on each transmit
+		variable data_in				: std_logic_vector(7 downto 0) := (others => '0');
+		-- For counting number of words to take in on a burst write command
+		variable count					: std_logic_vector(15 downto 0) := (others => '0');
+		-- Used to siginify a need to walk through address locations
+		variable inc_addr				: std_logic := '0';
+		
+		-- Command states list
+		
+     	-- Sets burst length
+		constant CMD_BURST			: std_logic_vector(7 downto 0) := x"00";
+		-- Write waveform data
+		constant CMD_WRITESINGLE 	: std_logic_vector(7 downto 0) := x"01";
+		constant CMD_WRITEBURST 	: std_logic_vector(7 downto 0) := x"02";		
+		-- input total register length
+		constant CMD_SETLEN	 		: std_logic_vector(7 downto 0) := x"03";
+		-- Select system channel to receive data
+		constant CMD_CHANNEL			: std_logic_vector(7 downto 0) := x"04";
+		
+	begin			
+		if rising_edge(clk_comm) then
+			case comm_state is
+			when RESET =>
+				-- These are the same as the default values when these are defined
+				comm_rdl_i			<= '1';
+				data_reg_length	<= (others => '0');
+				addr_comm			<= (others => '0');
+				data_in				:= (others => '0');
+				count					:= (others => '0');
+				inc_addr				:= '0';
+				command 				:= NONE;
+				
+				-- Return to IDLE
+				comm_state 		:= IDLE;
+				
+			when IDLE =>
+				-- IDLE until data transfer with FIFO or other processes is ready/complete
+					
+				-- Are we ready/writing or just staying in idle
+				if comm_rxfl = '0' then
+					comm_rdl_i 			<= '0'; -- Take the read line low to take data. Data available on the next clock cycle.
+					comm_state			:= RECEIVE;
+				else
+					-- Stay in IDLE
+					comm_rdl_i 			<= '1'; -- default
+					comm_state 			:= IDLE;
+				end if;
+				
+				-- If flagged, increment address (this is after the current clock cycle)
+				addr_comm 		<= addr_comm + inc_addr;
+				inc_addr			:= '0';
+		
+			-- RECEIVE cycle. RECEIVE->IDLE->RECEIVE->...->IDLE
+		   when RECEIVE =>
+				-- Data is available
+				data_in			:= comm_data;	-- Latch data
+				-- Raise the Rd line and return to command "RECEIVE1". 
+				-- "RECEIVE1" will trigger the "RECEIVE2" state if more data is available.
+				comm_rdl_i 		<= '1';
+				comm_state 		:= IDLE;
+						
+						
+				-- Interpret or route incoming data.
+				case command is
+				when NONE =>
+					-- Incoming is a command
+					case data_in is
+					
+						when CMD_BURST => -- Following two bytes is the burst count for writing a burst of data
+							command 			:= BURST1;
+							
+						when CMD_WRITESINGLE => -- Following two bytes are data to be written into the memory
+							count 			:= CONV_STD_LOGIC_VECTOR(1,count'length); -- Burst count is 1;
+							command 			:= WRITE1;
+							
+						when CMD_WRITEBURST => -- Interpret each pair of subsequent bytes as a write and decrement count until 0
+							if count > 0 then
+								command 		:= WRITE1;
+							else
+								command 		:= NONE;
+							end if;
+							
+						when CMD_SETLEN => -- Following two bytes is the register length for memory storage
+							command 			:= SETLEN1;
+							
+						when CMD_CHANNEL => -- Following byte sets the communication channel for a device
+							command			:= CHANNEL1;
+						
+						-- unkown command; ignore
+						when others =>
+							command 			:= NONE;
+							
+					end case;
+					
+					
+				--Begin handling of the COMMAND_STATES cases
+					
+				-- CMD_BURST sequence
+				when BURST1 =>
+					-- First of two bytes. Little Endian
+					count					 		:= x"00" & data_in;
+					command 						:= BURST2;
+				when BURST2 =>
+					-- Second of two bytes. Little Endian
+					count							:= data_in & count(7 downto 0);
+					command			 			:= NONE; -- Done with this command	
+					
+				-- CMD_WRITESINGLE and CMD_WRITEBURST.
+				when WRITE1 =>
+					-- Place data on register
+					data_q_i						<= x"00" & data_in;
+					-- We need a second byte to finish the data
+					command						:= WRITE2;		
+				when WRITE2 =>
+					-- Place data on register
+					data_q_i						<= data_in & data_q_i(7 downto 0);
+
+					-- Decrement count, none command when done, else repeat.
+					count							:= count - 1;
+					if count < 1 then
+						-- Done with writing to memory so allow rest of process to function
+						command 					:= NONE; -- Done with write command
+					else
+						command					:= WRITE1; -- Read more data from FIFO as it becomes available.
+					end if;
+					
+				-- CMD_SETLEN sequence
+				when SETLEN1 =>
+					-- First of two bytes. Little Endian
+					data_reg_length			<= x"00" & data_in;
+					command						:= SETLEN2;
+				when SETLEN2 =>
+					-- Second of two bytes. Little Endian
+					data_reg_length			<= data_in(data_reg_length'LENGTH-9 downto 0) & data_reg_length(7 downto 0);
+					command			 			:= NONE; -- Done with this command
+					
+				-- CMD_CHANNEL sequence
+				when CHANNEL1 =>
+					-- set the communication channel
+					channel_i					<= data_in;
+					command						:= NONE;
+										
+				when others =>
+					command	 					:= NONE;
+					
+				end case;
+			end case;
+		end if;
+	end process;
+	
+end Behavioral;

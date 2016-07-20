@@ -1,0 +1,205 @@
+{
+	"partitions" : [
+		{
+			"name" : "Top",
+			"pins" : [
+				{
+					"name" : "DAC0_wr",
+					"strict" : false
+				},
+				{
+					"name" : "ext_rdl",
+					"strict" : false
+				},
+				{
+					"name" : "DAC1_wr",
+					"strict" : false
+				},
+				{
+					"name" : "LogicOut1",
+					"strict" : false
+				},
+				{
+					"name" : "LogicOut2",
+					"strict" : false
+				},
+				{
+					"name" : "LogicOut3",
+					"strict" : false
+				},
+				{
+					"name" : "LogicOut4",
+					"strict" : false
+				},
+				{
+					"name" : "DAC0_output[11]",
+					"strict" : false
+				},
+				{
+					"name" : "DAC0_output[10]",
+					"strict" : false
+				},
+				{
+					"name" : "DAC0_output[9]",
+					"strict" : false
+				},
+				{
+					"name" : "DAC0_output[8]",
+					"strict" : false
+				},
+				{
+					"name" : "DAC0_output[7]",
+					"strict" : false
+				},
+				{
+					"name" : "DAC0_output[6]",
+					"strict" : false
+				},
+				{
+					"name" : "DAC0_output[5]",
+					"strict" : false
+				},
+				{
+					"name" : "DAC0_output[4]",
+					"strict" : false
+				},
+				{
+					"name" : "DAC0_output[3]",
+					"strict" : false
+				},
+				{
+					"name" : "DAC0_output[2]",
+					"strict" : false
+				},
+				{
+					"name" : "DAC0_output[1]",
+					"strict" : false
+				},
+				{
+					"name" : "DAC0_output[0]",
+					"strict" : false
+				},
+				{
+					"name" : "DAC1_output[11]",
+					"strict" : false
+				},
+				{
+					"name" : "DAC1_output[10]",
+					"strict" : false
+				},
+				{
+					"name" : "DAC1_output[9]",
+					"strict" : false
+				},
+				{
+					"name" : "DAC1_output[8]",
+					"strict" : false
+				},
+				{
+					"name" : "DAC1_output[7]",
+					"strict" : false
+				},
+				{
+					"name" : "DAC1_output[6]",
+					"strict" : false
+				},
+				{
+					"name" : "DAC1_output[5]",
+					"strict" : false
+				},
+				{
+					"name" : "DAC1_output[4]",
+					"strict" : false
+				},
+				{
+					"name" : "DAC1_output[3]",
+					"strict" : false
+				},
+				{
+					"name" : "DAC1_output[2]",
+					"strict" : false
+				},
+				{
+					"name" : "DAC1_output[1]",
+					"strict" : false
+				},
+				{
+					"name" : "DAC1_output[0]",
+					"strict" : false
+				},
+				{
+					"name" : "LED[7]",
+					"strict" : false
+				},
+				{
+					"name" : "LED[6]",
+					"strict" : false
+				},
+				{
+					"name" : "LED[5]",
+					"strict" : false
+				},
+				{
+					"name" : "LED[4]",
+					"strict" : false
+				},
+				{
+					"name" : "LED[3]",
+					"strict" : false
+				},
+				{
+					"name" : "LED[2]",
+					"strict" : false
+				},
+				{
+					"name" : "LED[1]",
+					"strict" : false
+				},
+				{
+					"name" : "LED[0]",
+					"strict" : false
+				},
+				{
+					"name" : "button0",
+					"strict" : false
+				},
+				{
+					"name" : "ext_rxfl",
+					"strict" : false
+				},
+				{
+					"name" : "ext_data[7]",
+					"strict" : false
+				},
+				{
+					"name" : "ext_data[6]",
+					"strict" : false
+				},
+				{
+					"name" : "ext_data[5]",
+					"strict" : false
+				},
+				{
+					"name" : "ext_data[4]",
+					"strict" : false
+				},
+				{
+					"name" : "ext_data[3]",
+					"strict" : false
+				},
+				{
+					"name" : "ext_data[2]",
+					"strict" : false
+				},
+				{
+					"name" : "ext_data[1]",
+					"strict" : false
+				},
+				{
+					"name" : "ext_data[0]",
+					"strict" : false
+				}
+			]
+		}
+	]
+}
