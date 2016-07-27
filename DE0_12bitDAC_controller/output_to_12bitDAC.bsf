@@ -48,15 +48,15 @@ agreement for further details.
 	(port
 		(pt 0 80)
 		(input)
-		(text "run_trigger" (rect 0 0 43 12)(font "Arial" ))
-		(text "run_trigger" (rect 21 75 64 87)(font "Arial" ))
+		(text "run_trigger_n" (rect 0 0 54 12)(font "Arial" ))
+		(text "run_trigger_n" (rect 21 75 75 87)(font "Arial" ))
 		(line (pt 0 80)(pt 16 80)(line_width 1))
 	)
 	(port
 		(pt 232 32)
 		(output)
-		(text "dac_q[11..0]" (rect 0 0 47 12)(font "Arial" ))
-		(text "dac_q[11..0]" (rect 164 27 211 39)(font "Arial" ))
+		(text "databus_q[11..0]" (rect 0 0 63 12)(font "Arial" ))
+		(text "databus_q[11..0]" (rect 148 27 211 39)(font "Arial" ))
 		(line (pt 232 32)(pt 216 32)(line_width 3))
 	)
 	(port
@@ -69,15 +69,15 @@ agreement for further details.
 	(port
 		(pt 232 64)
 		(output)
-		(text "wr" (rect 0 0 9 12)(font "Arial" ))
-		(text "wr" (rect 202 59 211 71)(font "Arial" ))
+		(text "wr_n" (rect 0 0 20 12)(font "Arial" ))
+		(text "wr_n" (rect 191 59 211 71)(font "Arial" ))
 		(line (pt 232 64)(pt 216 64)(line_width 1))
 	)
 	(port
 		(pt 232 80)
 		(output)
-		(text "cs" (rect 0 0 9 12)(font "Arial" ))
-		(text "cs" (rect 202 75 211 87)(font "Arial" ))
+		(text "cs_n" (rect 0 0 20 12)(font "Arial" ))
+		(text "cs_n" (rect 191 75 211 87)(font "Arial" ))
 		(line (pt 232 80)(pt 216 80)(line_width 1))
 	)
 	(drawing

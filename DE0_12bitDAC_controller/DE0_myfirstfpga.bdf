@@ -54,7 +54,7 @@ agreement for further details.
 )
 (pin
 	(input)
-	(rect 792 200 968 216)
+	(rect 792 208 968 224)
 	(text "INPUT" (rect 133 0 174 11)(font "Arial" (font_size 6)))
 	(text "button0" (rect 9 0 66 14)(font "Arial" ))
 	(pt 176 8)
@@ -86,7 +86,7 @@ agreement for further details.
 )
 (pin
 	(input)
-	(rect 72 600 248 616)
+	(rect 64 528 240 544)
 	(text "INPUT" (rect 133 0 174 11)(font "Arial" (font_size 6)))
 	(text "LogicIn1" (rect 9 0 75 14)(font "Arial" ))
 	(pt 176 8)
@@ -102,9 +102,25 @@ agreement for further details.
 )
 (pin
 	(input)
-	(rect 72 616 248 632)
+	(rect 64 544 240 560)
 	(text "INPUT" (rect 133 0 174 11)(font "Arial" (font_size 6)))
 	(text "LogicIn2" (rect 9 0 75 14)(font "Arial" ))
+	(pt 176 8)
+	(drawing
+		(line (pt 92 12)(pt 117 12))
+		(line (pt 92 4)(pt 117 4))
+		(line (pt 121 8)(pt 176 8))
+		(line (pt 92 12)(pt 92 4))
+		(line (pt 117 4)(pt 121 8))
+		(line (pt 117 12)(pt 121 8))
+	)
+	(text "VCC" (rect 136 7 160 18)(font "Arial" (font_size 6)))
+)
+(pin
+	(input)
+	(rect 1072 816 1248 832)
+	(text "INPUT" (rect 133 0 174 11)(font "Arial" (font_size 6)))
+	(text "button1" (rect 9 0 66 14)(font "Arial" ))
 	(pt 176 8)
 	(drawing
 		(line (pt 92 12)(pt 117 12))
@@ -246,7 +262,7 @@ agreement for further details.
 )
 (pin
 	(output)
-	(rect 416 584 592 600)
+	(rect 416 512 592 528)
 	(text "OUTPUT" (rect 1 0 50 11)(font "Arial" (font_size 6)))
 	(text "LogicOut1" (rect 90 0 164 14)(font "Arial" ))
 	(pt 0 8)
@@ -262,7 +278,7 @@ agreement for further details.
 )
 (pin
 	(output)
-	(rect 416 600 592 616)
+	(rect 416 528 592 544)
 	(text "OUTPUT" (rect 1 0 50 11)(font "Arial" (font_size 6)))
 	(text "LogicOut2" (rect 90 0 164 14)(font "Arial" ))
 	(pt 0 8)
@@ -278,7 +294,7 @@ agreement for further details.
 )
 (pin
 	(output)
-	(rect 416 616 592 632)
+	(rect 416 544 592 560)
 	(text "OUTPUT" (rect 1 0 50 11)(font "Arial" (font_size 6)))
 	(text "LogicOut3" (rect 90 0 164 14)(font "Arial" ))
 	(pt 0 8)
@@ -294,7 +310,7 @@ agreement for further details.
 )
 (pin
 	(output)
-	(rect 416 632 592 648)
+	(rect 416 560 592 576)
 	(text "OUTPUT" (rect 1 0 50 11)(font "Arial" (font_size 6)))
 	(text "LogicOut4" (rect 90 0 164 14)(font "Arial" ))
 	(pt 0 8)
@@ -336,15 +352,15 @@ agreement for further details.
 	(port
 		(pt 0 80)
 		(input)
-		(text "run_trigger" (rect 0 0 90 14)(font "Arial" ))
-		(text "run_trigger" (rect 21 75 111 89)(font "Arial" ))
+		(text "run_trigger_n" (rect 0 0 107 14)(font "Arial" ))
+		(text "run_trigger_n" (rect 21 75 128 89)(font "Arial" ))
 		(line (pt 0 80)(pt 16 80))
 	)
 	(port
 		(pt 232 32)
 		(output)
-		(text "dac_q[11..0]" (rect 0 0 99 14)(font "Arial" ))
-		(text "dac_q[11..0]" (rect 128 27 211 41)(font "Arial" ))
+		(text "databus_q[11..0]" (rect 0 0 132 14)(font "Arial" ))
+		(text "databus_q[11..0]" (rect 100 27 211 41)(font "Arial" ))
 		(line (pt 232 32)(pt 216 32)(line_width 3))
 	)
 	(port
@@ -357,15 +373,15 @@ agreement for further details.
 	(port
 		(pt 232 64)
 		(output)
-		(text "wr" (rect 0 0 16 14)(font "Arial" ))
-		(text "wr" (rect 198 59 211 73)(font "Arial" ))
+		(text "wr_n" (rect 0 0 33 14)(font "Arial" ))
+		(text "wr_n" (rect 184 59 211 73)(font "Arial" ))
 		(line (pt 232 64)(pt 216 64))
 	)
 	(port
 		(pt 232 80)
 		(output)
-		(text "cs" (rect 0 0 16 14)(font "Arial" ))
-		(text "cs" (rect 198 75 211 89)(font "Arial" ))
+		(text "cs_n" (rect 0 0 33 14)(font "Arial" ))
+		(text "cs_n" (rect 184 75 211 89)(font "Arial" ))
 		(line (pt 232 80)(pt 216 80))
 	)
 	(drawing
@@ -478,15 +494,15 @@ agreement for further details.
 	(port
 		(pt 0 80)
 		(input)
-		(text "run_trigger" (rect 0 0 90 14)(font "Arial" ))
-		(text "run_trigger" (rect 21 75 111 89)(font "Arial" ))
+		(text "run_trigger_n" (rect 0 0 107 14)(font "Arial" ))
+		(text "run_trigger_n" (rect 21 75 128 89)(font "Arial" ))
 		(line (pt 0 80)(pt 16 80))
 	)
 	(port
 		(pt 232 32)
 		(output)
-		(text "dac_q[11..0]" (rect 0 0 99 14)(font "Arial" ))
-		(text "dac_q[11..0]" (rect 128 27 211 41)(font "Arial" ))
+		(text "databus_q[11..0]" (rect 0 0 132 14)(font "Arial" ))
+		(text "databus_q[11..0]" (rect 100 27 211 41)(font "Arial" ))
 		(line (pt 232 32)(pt 216 32)(line_width 3))
 	)
 	(port
@@ -499,15 +515,15 @@ agreement for further details.
 	(port
 		(pt 232 64)
 		(output)
-		(text "wr" (rect 0 0 16 14)(font "Arial" ))
-		(text "wr" (rect 198 59 211 73)(font "Arial" ))
+		(text "wr_n" (rect 0 0 33 14)(font "Arial" ))
+		(text "wr_n" (rect 184 59 211 73)(font "Arial" ))
 		(line (pt 232 64)(pt 216 64))
 	)
 	(port
 		(pt 232 80)
 		(output)
-		(text "cs" (rect 0 0 16 14)(font "Arial" ))
-		(text "cs" (rect 198 75 211 89)(font "Arial" ))
+		(text "cs_n" (rect 0 0 33 14)(font "Arial" ))
+		(text "cs_n" (rect 184 75 211 89)(font "Arial" ))
 		(line (pt 232 80)(pt 216 80))
 	)
 	(drawing
@@ -774,54 +790,6 @@ agreement for further details.
 	)
 )
 (symbol
-	(rect 320 88 560 240)
-	(text "altpll_myfirstfpga" (rect 72 0 305 18)(font "Arial" (font_size 10)))
-	(text "dac_pll" (rect 8 134 65 148)(font "Arial" ))
-	(port
-		(pt 0 64)
-		(input)
-		(text "inclk0" (rect 0 0 56 16)(font "Arial" (font_size 8)))
-		(text "inclk0" (rect 4 50 60 66)(font "Arial" (font_size 8)))
-		(line (pt 0 64)(pt 40 64))
-	)
-	(port
-		(pt 240 64)
-		(output)
-		(text "c0" (rect 0 0 18 16)(font "Arial" (font_size 8)))
-		(text "c0" (rect 224 50 242 66)(font "Arial" (font_size 8)))
-	)
-	(drawing
-		(text "Cyclone IV E" (rect 164 136 263 150)(font "Arial" ))
-		(text "inclk0 frequency: 50.000 MHz" (rect 50 59 281 73)(font "Arial" ))
-		(text "Operation Mode: Normal" (rect 50 72 231 86)(font "Arial" ))
-		(text "Clk " (rect 51 93 84 107)(font "Arial" ))
-		(text "Ratio" (rect 72 93 113 107)(font "Arial" ))
-		(text "Ph (dg)" (rect 98 93 155 107)(font "Arial" ))
-		(text "DC (%)" (rect 132 93 181 107)(font "Arial" ))
-		(text "c0" (rect 54 107 70 121)(font "Arial" ))
-		(text "1/25" (rect 74 107 107 121)(font "Arial" ))
-		(text "0.00" (rect 104 107 137 121)(font "Arial" ))
-		(text "50.00" (rect 136 107 177 121)(font "Arial" ))
-		(line (pt 0 0)(pt 241 0))
-		(line (pt 241 0)(pt 241 153))
-		(line (pt 0 153)(pt 241 153))
-		(line (pt 0 0)(pt 0 153))
-		(line (pt 48 91)(pt 164 91))
-		(line (pt 48 104)(pt 164 104))
-		(line (pt 48 118)(pt 164 118))
-		(line (pt 48 91)(pt 48 118))
-		(line (pt 69 91)(pt 69 118)(line_width 3))
-		(line (pt 95 91)(pt 95 118)(line_width 3))
-		(line (pt 129 91)(pt 129 118)(line_width 3))
-		(line (pt 163 91)(pt 163 118))
-		(line (pt 40 48)(pt 207 48))
-		(line (pt 207 48)(pt 207 135))
-		(line (pt 40 135)(pt 207 135))
-		(line (pt 40 48)(pt 40 135))
-		(line (pt 239 64)(pt 207 64))
-	)
-)
-(symbol
 	(rect 320 248 560 400)
 	(text "comm_pll" (rect 92 0 195 18)(font "Arial" (font_size 10)))
 	(text "comm_pll" (rect 8 134 74 148)(font "Arial" ))
@@ -870,9 +838,9 @@ agreement for further details.
 	)
 )
 (symbol
-	(rect 240 560 416 672)
+	(rect 240 488 416 600)
 	(text "logic_processor" (rect 5 0 128 14)(font "Arial" ))
-	(text "inst" (rect 8 96 41 110)(font "Arial" ))
+	(text "inst2" (rect 8 96 49 110)(font "Arial" ))
 	(port
 		(pt 0 32)
 		(input)
@@ -922,28 +890,61 @@ agreement for further details.
 		(text "LogicOut4" (rect 93 75 155 89)(font "Arial" ))
 		(line (pt 176 80)(pt 160 80))
 	)
-	(parameter
-		"MIN_COUNT"
-		"0"
-		""
-		(type "PARAMETER_SIGNED_DEC")	)
-	(parameter
-		"MAX_COUNT"
-		"255"
-		""
-		(type "PARAMETER_SIGNED_DEC")	)
 	(drawing
 		(rectangle (rect 16 16 160 96))
 	)
-	(annotation_block (parameter)(rect 416 496 712 560))
+)
+(symbol
+	(rect 320 88 560 240)
+	(text "altpll_myfirstfpga" (rect 72 0 305 18)(font "Arial" (font_size 10)))
+	(text "dac_pll" (rect 8 134 65 148)(font "Arial" ))
+	(port
+		(pt 0 64)
+		(input)
+		(text "inclk0" (rect 0 0 56 16)(font "Arial" (font_size 8)))
+		(text "inclk0" (rect 4 50 60 66)(font "Arial" (font_size 8)))
+		(line (pt 0 64)(pt 40 64))
+	)
+	(port
+		(pt 240 64)
+		(output)
+		(text "c0" (rect 0 0 18 16)(font "Arial" (font_size 8)))
+		(text "c0" (rect 224 50 242 66)(font "Arial" (font_size 8)))
+	)
+	(drawing
+		(text "Cyclone IV E" (rect 164 136 263 150)(font "Arial" ))
+		(text "inclk0 frequency: 50.000 MHz" (rect 50 59 281 73)(font "Arial" ))
+		(text "Operation Mode: Normal" (rect 50 72 231 86)(font "Arial" ))
+		(text "Clk " (rect 51 93 84 107)(font "Arial" ))
+		(text "Ratio" (rect 72 93 113 107)(font "Arial" ))
+		(text "Ph (dg)" (rect 98 93 155 107)(font "Arial" ))
+		(text "DC (%)" (rect 132 93 181 107)(font "Arial" ))
+		(text "c0" (rect 54 107 70 121)(font "Arial" ))
+		(text "1/25" (rect 74 107 107 121)(font "Arial" ))
+		(text "0.00" (rect 104 107 137 121)(font "Arial" ))
+		(text "50.00" (rect 136 107 177 121)(font "Arial" ))
+		(line (pt 0 0)(pt 241 0))
+		(line (pt 241 0)(pt 241 153))
+		(line (pt 0 153)(pt 241 153))
+		(line (pt 0 0)(pt 0 153))
+		(line (pt 48 91)(pt 164 91))
+		(line (pt 48 104)(pt 164 104))
+		(line (pt 48 118)(pt 164 118))
+		(line (pt 48 91)(pt 48 118))
+		(line (pt 69 91)(pt 69 118)(line_width 3))
+		(line (pt 95 91)(pt 95 118)(line_width 3))
+		(line (pt 129 91)(pt 129 118)(line_width 3))
+		(line (pt 163 91)(pt 163 118))
+		(line (pt 40 48)(pt 207 48))
+		(line (pt 207 48)(pt 207 135))
+		(line (pt 40 135)(pt 207 135))
+		(line (pt 40 48)(pt 40 135))
+		(line (pt 239 64)(pt 207 64))
+	)
 )
 (connector
 	(pt 320 152)
 	(pt 312 152)
-)
-(connector
-	(pt 968 200)
-	(pt 968 208)
 )
 (connector
 	(text "data_out[15..8]" (rect 808 144 931 158)(font "Arial" ))
@@ -1122,16 +1123,6 @@ agreement for further details.
 	(bus)
 )
 (connector
-	(text "button0" (rect 1256 744 1313 758)(font "Arial" ))
-	(pt 1256 760)
-	(pt 1304 760)
-)
-(connector
-	(text "button0" (rect 1256 536 1313 550)(font "Arial" ))
-	(pt 1256 552)
-	(pt 1304 552)
-)
-(connector
 	(text "clk_comm" (rect 914 544 980 558)(font "Arial" ))
 	(pt 904 560)
 	(pt 968 560)
@@ -1142,21 +1133,42 @@ agreement for further details.
 	(pt 968 768)
 )
 (connector
+	(text "clk_50MHz" (rect 178 504 252 518)(font "Arial" ))
+	(pt 240 520)
+	(pt 168 520)
+)
+(connector
+	(pt 1248 552)
+	(pt 1248 760)
+)
+(connector
+	(pt 1248 760)
+	(pt 1248 824)
+)
+(connector
+	(pt 968 200)
+	(pt 968 216)
+)
+(connector
+	(pt 1248 552)
+	(pt 1304 552)
+)
+(connector
+	(pt 1248 760)
+	(pt 1304 760)
+)
+(connector
 	(pt 312 152)
 	(pt 312 312)
 )
 (connector
-	(pt 320 312)
 	(pt 312 312)
+	(pt 320 312)
 )
 (connector
 	(text "clk_comm" (rect 578 296 644 310)(font "Arial" ))
 	(pt 560 312)
 	(pt 624 312)
 )
-(connector
-	(text "clk_dac" (rect 178 576 235 590)(font "Arial" ))
-	(pt 240 592)
-	(pt 168 592)
-)
 (junction (pt 312 152))
+(junction (pt 1248 760))

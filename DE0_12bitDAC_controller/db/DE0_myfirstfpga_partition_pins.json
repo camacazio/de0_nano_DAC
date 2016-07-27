@@ -16,22 +16,6 @@
 					"strict" : false
 				},
 				{
-					"name" : "LogicOut1",
-					"strict" : false
-				},
-				{
-					"name" : "LogicOut2",
-					"strict" : false
-				},
-				{
-					"name" : "LogicOut3",
-					"strict" : false
-				},
-				{
-					"name" : "LogicOut4",
-					"strict" : false
-				},
-				{
 					"name" : "DAC0_output[11]",
 					"strict" : false
 				},
@@ -161,6 +145,10 @@
 				},
 				{
 					"name" : "button0",
+					"strict" : false
+				},
+				{
+					"name" : "button1",
 					"strict" : false
 				},
 				{
