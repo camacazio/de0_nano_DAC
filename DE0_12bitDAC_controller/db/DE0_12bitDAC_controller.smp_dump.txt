@@ -8,6 +8,12 @@ dac_read_mode.READ_dV 0 0 1 0 0 1
 dac_read_mode.DONE 0 1 0 0 0 1 
 dac_read_mode.NONE 1 0 0 0 0 1 
 
+State Machine - |DE0_myfirstfpga|output_to_12bitDAC:DAC1_inst|dac_state
+Name dac_state.RUNNING dac_state.IDLE dac_state.RESET 
+dac_state.RESET 0 0 0 
+dac_state.IDLE 0 1 1 
+dac_state.RUNNING 1 0 1 
+
 State Machine - |DE0_myfirstfpga|FT245Comm:comm_inst|comm_state
 Name comm_state.RECEIVE comm_state.IDLE comm_state.RESET 
 comm_state.RESET 0 0 0 
@@ -33,3 +39,9 @@ dac_read_mode.READ_dV_float 0 0 0 1 0 1
 dac_read_mode.READ_dV 0 0 1 0 0 1 
 dac_read_mode.DONE 0 1 0 0 0 1 
 dac_read_mode.NONE 1 0 0 0 0 1 
+
+State Machine - |DE0_myfirstfpga|output_to_12bitDAC:DAC0_inst|dac_state
+Name dac_state.RUNNING dac_state.IDLE dac_state.RESET 
+dac_state.RESET 0 0 0 
+dac_state.IDLE 0 1 1 
+dac_state.RUNNING 1 0 1 

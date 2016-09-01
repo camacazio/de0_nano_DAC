@@ -1266,8 +1266,8 @@ agreement for further details.
 )
 (connector
 	(text "adc_clk" (rect 602 472 659 486)(font "Arial" ))
-	(pt 648 488)
 	(pt 584 488)
+	(pt 648 488)
 )
 (junction (pt 312 152))
 (junction (pt 1136 424))

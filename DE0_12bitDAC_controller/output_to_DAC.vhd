@@ -24,7 +24,11 @@ entity output_to_12bitDAC is
 		
 		-- Data buses
 		data_in			: in std_logic_vector(15 downto 0); -- 16 bit data input for waveform data
-		dac_out			: out std_logic_vector(11 downto 0) := (others => '0'); -- 12 bit DAC output
+		dac_out			: out std_logic_vector(11 downto 0); -- 12 bit DAC output
+		
+		-- Logic to output new dac value
+		wr					: out std_logic; -- Data is valid to write when '0', initialize so dac is suspended
+		cs					: out std_logic; -- chip select DAC line, DAC active when '0', initialize so dac is suspended
 		
 		-- Memory address location for DAC data from memory
 		read_addr_out	: out std_logic_vector(13 downto 0);
@@ -32,11 +36,7 @@ entity output_to_12bitDAC is
 		-- Input to begin running waveforms from FT245
 		run_cmd			: in std_logic;
 		-- Logic input to begin running waveforms
-		run_trigger		: in std_logic;
-		
-		-- Logic to output new dac value
-		wr					: out std_logic; -- Data is valid to write when '0', initialize so dac is at 0 output
-		cs					: out std_logic := '0' -- chip select DAC line, DAC active when '0'
+		run_trigger		: in std_logic
 	);
 
 end entity;
@@ -47,10 +47,11 @@ architecture rtl of output_to_12bitDAC is
 	-- SIGNALS
 	----------------------------------------------------------------------------------
 	
+	-- Write enable and chip select
+	signal wr_i				: std_logic := '0';
+	signal cs_i				: std_logic := '0';
 	-- Internal copy of the address for reading from memory
 	signal read_addr		: std_logic_vector((read_addr_out'length - 1) downto 0) := (others => '0');
-	-- Write enable
-	signal wr_i				: std_logic := '1';
 		
 	-- Amount of clock cycles to read in new waveform data
 	constant READ_TIME	: std_logic_vector(15 downto 0) := x"0003";
@@ -64,13 +65,14 @@ begin
 	read_addr_out	<= read_addr;
 	-- Latch writing to DAC
 	wr					<= not(wr_i);
+	cs					<= not(cs_i);
 	
 	-- interpret data for DAC
 	process (clk_dac, run_cmd, run_trigger)
 	
 		-- States for the DAC
-		type DAC_STATES 				is (IDLE, RUNNING);
-		variable dac_state			: DAC_STATES := IDLE;
+		type DAC_STATES 				is (RESET, IDLE, RUNNING);
+		variable dac_state			: DAC_STATES := RESET;
 		
 		-- States when pulling data out of memory
 		type DAC_READ_MODES			is (READ_T, READ_V, READ_dV_float, READ_dV, DONE, NONE);
@@ -98,7 +100,14 @@ begin
 		if rising_edge(clk_dac) then
 			
 			case dac_state is
-			--Awaiting a run command
+			-- Return to boot conditions
+			when RESET =>
+				dac_out			<= (others => '0');
+				wr_i				<= '0';
+				cs_i				<= '0';
+				dac_state		:= IDLE;
+				
+			-- Awaiting a run command
 			when IDLE =>				
 				-- Prepare to begin reading data at start of 'running'
 				dac_read_mode	:= READ_T;
@@ -108,8 +117,9 @@ begin
 				count				:= (others => '0');
 				timing			:= '0';
 				
-				-- Deactivate DAC output
+				-- Deactivate DAC transparent write but activate chip
 				wr_i				<= '0';
+				cs_i				<= '1';
 				
 				-- Check if the next value on the memory register signifies the end of memory,
 				-- should be in the position to which READ_T would point in memory
@@ -201,7 +211,7 @@ begin
 				end case;
 				
 				-- Alter dac_val_i from coefficients for next output
-				dac_out			<= dac_out_i(31 downto (32 - dac_out'length));
+				dac_out		<= dac_out_i(31 downto (32 - dac_out'length));
 				dac_out_i	:= dac_out_i + dac_dV_i;
 							
 				if timing = '1' then

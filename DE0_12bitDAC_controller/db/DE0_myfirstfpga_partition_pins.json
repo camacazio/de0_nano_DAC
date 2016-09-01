@@ -16,6 +16,14 @@
 					"strict" : false
 				},
 				{
+					"name" : "DAC1_cs",
+					"strict" : false
+				},
+				{
+					"name" : "DAC0_cs",
+					"strict" : false
+				},
+				{
 					"name" : "ADC_DIN",
 					"strict" : false
 				},
