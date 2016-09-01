@@ -20,7 +20,7 @@
 ## PROGRAM "Quartus Prime"
 ## VERSION "Version 16.0.0 Build 211 04/27/2016 SJ Lite Edition"
 
-## DATE    "Mon Jul 25 11:01:26 2016"
+## DATE    "Thu May 26 11:39:49 2016"
 
 ##
 ## DEVICE  "EP4CE22F17C6"
@@ -49,9 +49,6 @@ create_clock -name {clk_50MHz} -period 20.000 -waveform { 0.000 10.000 } [get_po
 derive_pll_clocks
 derive_clock_uncertainty
 
-create_generated_clock -name {comm_pll|altpll_component|auto_generated|pll1|clk[0]} -source [get_pins {comm_pll|altpll_component|auto_generated|pll1|inclk[0]}] -duty_cycle 50/1 -multiply_by 1 -divide_by 10 -master_clock {clk_50MHz} [get_pins {comm_pll|altpll_component|auto_generated|pll1|clk[0]}] 
-create_generated_clock -name {comm_pll|altpll_component|auto_generated|pll1|clk[1]} -source [get_pins {comm_pll|altpll_component|auto_generated|pll1|inclk[0]}] -duty_cycle 50/1 -multiply_by 1 -divide_by 25 -master_clock {clk_50MHz} [get_pins {comm_pll|altpll_component|auto_generated|pll1|clk[1]}] 
-
 
 #**************************************************************
 # Set Clock Latency
@@ -62,6 +59,7 @@ create_generated_clock -name {comm_pll|altpll_component|auto_generated|pll1|clk[
 #**************************************************************
 # Set Clock Uncertainty
 #**************************************************************
+
 
 
 #**************************************************************

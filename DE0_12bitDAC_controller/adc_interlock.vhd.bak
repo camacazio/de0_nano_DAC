@@ -1,0 +1,96 @@
+module ADC_INTERLOCK (
+							iLOGIC_CLK,
+							iADC_data,
+							iCH_count,
+
+							oLED,
+							oLOGIC0,
+							oLOGIC1,
+							oLOGIC2
+							);
+
+// Clock					
+input					iLOGIC_CLK;
+// Read in ADC data read from another module
+input 	[11:0]	iADC_data;
+// Relevant ADC channel (0 through 7)
+input		[2:0]		iCH_count;
+
+// Logic output lines depending on ADC result
+output				oLOGIC0;
+output				oLOGIC1;
+output				oLOGIC2;
+
+// Used to map the logic to the LEDs
+output	[2:0]		oLED;
+
+reg					LOGIC0;	// channel 0 trigger
+reg					LOGIC1;	// channel 1 trigger
+reg					LOGIC2;	// channel 2 trigger	
+reg		[2:0] 	led;		// lights for each channel			
+
+// latch outputs, "high" deactivates the physical device
+assign	oLOGIC0 	=	~LOGIC0;
+assign	oLOGIC1	=	~LOGIC1;
+assign	oLOGIC2	=	~LOGIC2;
+assign	oLED		=	led;
+
+// threshold value, measured based on photodiode responses, may need to be diff. for each chan
+parameter ADC_THRESHOLD = 12'b100000000000;
+
+always@(posedge iLOGIC_CLK)
+begin
+
+	if(iLOGIC_CLK)
+	begin
+			
+		// update logic to be 'off' if the ADC data is below a threshold
+		if(iCH_count == 0)
+		begin 
+			if(iADC_data < ADC_THRESHOLD)
+			begin // flip logic to 'off'
+				LOGIC0 <=	0;
+				led[0] <=  	0;
+			end
+			
+			else
+			begin
+				LOGIC0 <=	1;
+				led[0] <= 	1;
+			end
+		end
+		
+		else if(iCH_count == 1)
+		begin 
+			if(iADC_data < ADC_THRESHOLD)
+			begin // flip logic to 'off'
+				LOGIC1 <=	0;
+				led[1] <=  	0;
+			end
+			
+			else
+			begin
+				LOGIC1 <=	1;
+				led[1] <= 	1;
+			end
+		end
+		
+		else if(iCH_count == 2)
+		begin 
+			if(iADC_data < ADC_THRESHOLD)
+			begin // flip logic to 'off'
+				LOGIC2 <=	0;
+				led[2] <=  	0;
+			end
+			
+			else
+			begin
+				LOGIC2 <=	1;
+				led[2] <= 	1;
+			end
+		end
+	end
+end
+
+endmodule
+					

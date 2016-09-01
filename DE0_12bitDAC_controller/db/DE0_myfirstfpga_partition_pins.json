@@ -16,6 +16,30 @@
 					"strict" : false
 				},
 				{
+					"name" : "ADC_DIN",
+					"strict" : false
+				},
+				{
+					"name" : "ADC_CS_n",
+					"strict" : false
+				},
+				{
+					"name" : "ADC_SCLK",
+					"strict" : false
+				},
+				{
+					"name" : "LogicOut1",
+					"strict" : false
+				},
+				{
+					"name" : "LogicOut3",
+					"strict" : false
+				},
+				{
+					"name" : "LogicOut2",
+					"strict" : false
+				},
+				{
 					"name" : "DAC0_output[11]",
 					"strict" : false
 				},
@@ -112,26 +136,6 @@
 					"strict" : false
 				},
 				{
-					"name" : "LED[7]",
-					"strict" : false
-				},
-				{
-					"name" : "LED[6]",
-					"strict" : false
-				},
-				{
-					"name" : "LED[5]",
-					"strict" : false
-				},
-				{
-					"name" : "LED[4]",
-					"strict" : false
-				},
-				{
-					"name" : "LED[3]",
-					"strict" : false
-				},
-				{
 					"name" : "LED[2]",
 					"strict" : false
 				},
@@ -144,7 +148,7 @@
 					"strict" : false
 				},
 				{
-					"name" : "button0",
+					"name" : "ext_rxfl",
 					"strict" : false
 				},
 				{
@@ -152,7 +156,15 @@
 					"strict" : false
 				},
 				{
-					"name" : "ext_rxfl",
+					"name" : "button0",
+					"strict" : false
+				},
+				{
+					"name" : "ext_data[0]",
+					"strict" : false
+				},
+				{
+					"name" : "ext_data[2]",
 					"strict" : false
 				},
 				{
@@ -176,15 +188,11 @@
 					"strict" : false
 				},
 				{
-					"name" : "ext_data[2]",
-					"strict" : false
-				},
-				{
 					"name" : "ext_data[1]",
 					"strict" : false
 				},
 				{
-					"name" : "ext_data[0]",
+					"name" : "ADC_DOUT",
 					"strict" : false
 				}
 			]

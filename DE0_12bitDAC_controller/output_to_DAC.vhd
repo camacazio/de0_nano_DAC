@@ -1,11 +1,10 @@
 ----------------------------------------------------------------------------------
 -- 12 bit output to DAC system.
--- When data is ready, it handshakes to receive the data and latches to the output.
 -- Pulls data out from memory and assumes it comes in with the following flow:
 -- 	1)Waveform duration
 --		2)Starting Voltage
 --		3)Slope
--- If duration comes in as x"FFFF", read address is reset (it is up to the user to design software to insert this)
+-- If duration comes in as x"FFFF", read_addr is reset (it is up to the user to design software to insert this)
 -- If duration comes in as x"FFFE", the 'running' state is paused to await for a new trigger ( " )
 ----------------------------------------------------------------------------------
 library IEEE;
@@ -21,22 +20,23 @@ entity output_to_12bitDAC is
 	(
 		-- clks for incoming data and outputting to DAC
 		clk_dac			: in std_logic;
+		--clk_dac_wr		: in std_logic;
 		
 		-- Data buses
 		data_in			: in std_logic_vector(15 downto 0); -- 16 bit data input for waveform data
-		databus_q		: out std_logic_vector(11 downto 0) := (others => '0'); -- output for 12 bit DAC data
+		dac_out			: out std_logic_vector(11 downto 0) := (others => '0'); -- 12 bit DAC output
 		
 		-- Memory address location for DAC data from memory
-		read_addr_q		: out std_logic_vector(13 downto 0);
+		read_addr_out	: out std_logic_vector(13 downto 0);
 		
-		-- Input to begin running waveforms from a command
+		-- Input to begin running waveforms from FT245
 		run_cmd			: in std_logic;
 		-- Logic input to begin running waveforms
-		run_trigger_n	: in std_logic;
+		run_trigger		: in std_logic;
 		
 		-- Logic to output new dac value
-		wr_n				: out std_logic; -- Data is transparent to write when '0'
-		cs_n				: out std_logic := '0' -- chip select DAC line, DAC active when '0'
+		wr					: out std_logic; -- Data is valid to write when '0', initialize so dac is at 0 output
+		cs					: out std_logic := '0' -- chip select DAC line, DAC active when '0'
 	);
 
 end entity;
@@ -47,11 +47,10 @@ architecture rtl of output_to_12bitDAC is
 	-- SIGNALS
 	----------------------------------------------------------------------------------
 	
-	-- Internal copies of pins
-	signal wr_i				: std_logic := '0';
 	-- Internal copy of the address for reading from memory
-	signal read_addr_i	: std_logic_vector((read_addr_q'length - 1) downto 0) := (others => '0');
-	-- Internal data bus for the DAC, 
+	signal read_addr		: std_logic_vector((read_addr_out'length - 1) downto 0) := (others => '0');
+	-- Write enable
+	signal wr_i				: std_logic := '1';
 		
 	-- Amount of clock cycles to read in new waveform data
 	constant READ_TIME	: std_logic_vector(15 downto 0) := x"0003";
@@ -61,14 +60,13 @@ architecture rtl of output_to_12bitDAC is
 	----------------------------------------------------------------------------------
 begin
 
-	-- Latch pins
-	wr_n			<= not(wr_i);
-	
 	-- Latch internal read address
-	read_addr_q	<= read_addr_i;
+	read_addr_out	<= read_addr;
+	-- Latch writing to DAC
+	wr					<= not(wr_i);
 	
 	-- interpret data for DAC
-	process (clk_dac, run_cmd, run_trigger_n)
+	process (clk_dac, run_cmd, run_trigger)
 	
 		-- States for the DAC
 		type DAC_STATES 				is (IDLE, RUNNING);
@@ -110,28 +108,29 @@ begin
 				count				:= (others => '0');
 				timing			:= '0';
 				
+				-- Deactivate DAC output
+				wr_i				<= '0';
+				
 				-- Check if the next value on the memory register signifies the end of memory,
 				-- should be in the position to which READ_T would point in memory
 				if data_in = x"FFFF" then
-					read_addr_i	<= (others => '0');
+					read_addr	<= (others => '0');
 				end if;
 
 				-- Prepare to enter the running process
-				if (run_cmd = '1' or run_trigger_n = '0') then
-					-- Start the waveform
-					dac_state	:= RUNNING;
-					-- Activate DAC output
-					wr_i			<= '1';
-				else
+				if (run_cmd = '1' or run_trigger = '0') then
 					-- Hold in idle with no DAC update
+					dac_state	:= RUNNING;
+				else
+					-- Start the waveform
 					dac_state	:= IDLE;
-					-- Deactivate DAC output
-					wr_i			<= '0';
 				end if;
 
-			-- RUNNING is interpreting data at the current address; the M9K RAM updates much faster, so no worries on timing with read_addr_i
+			-- RUNNING is interpreting data at the current address; the M9K RAM updates much faster, so no worries on timing with read_addr
 			when RUNNING =>
-
+			
+				-- Activate DAC output
+				wr_i				<= '1';
 				-- Latch external data to be processed
 				data_processed	:= data_in;
 				
@@ -139,7 +138,7 @@ begin
 				when READ_T =>											
 					-- Read in the time to run the waveform
 					time_dac_read					:= data_processed;
-					read_addr_i						<= read_addr_i + '1';
+					read_addr						<= read_addr + '1';
 					
 					-- Check if the time value flags the need to leave RUNNING
 					if data_processed >= x"FFFE" then
@@ -153,7 +152,7 @@ begin
 				when READ_V =>					
 					-- Read the voltage
 					dac_out_read					:= data_processed & x"0000";
-					read_addr_i						<= read_addr_i + '1';
+					read_addr						<= read_addr + '1';
 
 					-- Read in the slope
 					dac_read_mode					:= READ_dV_float;
@@ -161,7 +160,7 @@ begin
 				when READ_dV_float =>
 					-- Read linear fractional part
 					dac_dV_read(15 downto 0)	:= data_processed;
-					read_addr_i						<= read_addr_i + '1';
+					read_addr						<= read_addr + '1';
 					
 					--Read the integer part
 					dac_read_mode					:= READ_dV;
@@ -169,7 +168,7 @@ begin
 				when READ_dV =>
 					-- Read slope
 					dac_dV_read(31 downto 16)	:= data_processed;
-					read_addr_i						<= read_addr_i + '1';
+					read_addr						<= read_addr + '1';
 					
 					-- Finished reading in this portion of waveform
 					dac_read_mode					:= DONE;
@@ -202,7 +201,7 @@ begin
 				end case;
 				
 				-- Alter dac_val_i from coefficients for next output
-				databus_q	<= dac_out_i(31 downto (32 - databus_q'length));
+				dac_out			<= dac_out_i(31 downto (32 - dac_out'length));
 				dac_out_i	:= dac_out_i + dac_dV_i;
 							
 				if timing = '1' then
@@ -218,6 +217,6 @@ begin
 				
 			end case; 
 		end if;
-	end process;	
+	end process;			
 	
 end rtl;

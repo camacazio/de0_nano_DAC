@@ -7,6 +7,12 @@ use ieee.numeric_std.all;
 
 entity logic_processor is
 
+	generic
+	(
+		MIN_COUNT	: natural := 0;
+		MAX_COUNT	: natural := 255
+	);
+
 	port 
 	(
 		-- Clock input
@@ -17,27 +23,43 @@ entity logic_processor is
 		LogicIn2	   : in std_logic;
 		
 		-- Output logic ports
-		LogicOut1	: out std_logic := '0';
-		LogicOut2	: out std_logic := '0';
-		LogicOut3	: out std_logic := '0';
-		LogicOut4	: out std_logic := '0'
+		LogicOut1	: out std_logic;
+		LogicOut2	: out std_logic;
+		LogicOut3	: out std_logic;
+		LogicOut4	: out std_logic
 	);
 
 end entity;
 
 architecture rtl of logic_processor is
+
+	-- Signals
+	signal LO1_int	: std_logic := '0';
 	
 begin
 
-	-- latch outputs?
+	-- latch output
+	LogicOut1	<= LO1_int;
+	LogicOut2	<= LO1_int;
+	LogicOut3	<= LO1_int;
+	LogicOut4	<= LO1_int;
 
 	process (clk_sys)
+		variable   cnt	: integer range MIN_COUNT to MAX_COUNT;
 	begin
+		if (rising_edge(clk_sys)) then
 
-		LogicOut1	<= '0';
-		LogicOut2	<= '0';
-		LogicOut3	<= '0';
-		LogicOut4	<= '0';
+			if cnt >= (MAX_COUNT-1) then
+				-- Reset the counter to 0
+				cnt	:= 0;
+				LO1_int	<= not(LO1_int);
+
+			else
+				-- Increment the counter if counting is enabled			   
+				cnt 	:= cnt + 1;
+
+			end if;
+		end if;
 		
 	end process;
 

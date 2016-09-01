@@ -73,7 +73,18 @@ agreement for further details.
 		(text "LogicOut4" (rect 114 75 155 87)(font "Arial" ))
 		(line (pt 176 80)(pt 160 80)(line_width 1))
 	)
+	(parameter
+		"MIN_COUNT"
+		"0"
+		""
+		(type "PARAMETER_SIGNED_DEC")	)
+	(parameter
+		"MAX_COUNT"
+		"255"
+		""
+		(type "PARAMETER_SIGNED_DEC")	)
 	(drawing
 		(rectangle (rect 16 16 160 96)(line_width 1))
 	)
+	(annotation_block (parameter)(rect 192 -64 292 16))
 )

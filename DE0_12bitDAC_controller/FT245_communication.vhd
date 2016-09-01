@@ -15,7 +15,7 @@ entity FT245Comm is
 		clk_comm			: in 		std_logic;
 		
 		-- USB to FIFO communication: FT245RL
-		comm_data		: in		std_logic_vector(7 downto 0);		-- Unidirectional data bus from FIFO
+		comm_data		: in		std_logic_vector(7 downto 0);		-- Unidirectional data bus
 		comm_rxfl		: in		std_logic;								-- FIFO has data for read, default '1'
 		comm_rdl			: out		std_logic := '1';						-- Fetch from FIFO, default '1'
 		
