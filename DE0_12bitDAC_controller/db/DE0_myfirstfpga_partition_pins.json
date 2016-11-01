@@ -40,10 +40,6 @@
 					"strict" : false
 				},
 				{
-					"name" : "LogicOut3",
-					"strict" : false
-				},
-				{
 					"name" : "LogicOut2",
 					"strict" : false
 				},
@@ -144,10 +140,6 @@
 					"strict" : false
 				},
 				{
-					"name" : "LED[2]",
-					"strict" : false
-				},
-				{
 					"name" : "LED[1]",
 					"strict" : false
 				},
@@ -156,15 +148,19 @@
 					"strict" : false
 				},
 				{
-					"name" : "ext_rxfl",
-					"strict" : false
-				},
-				{
 					"name" : "button1",
 					"strict" : false
 				},
 				{
-					"name" : "button0",
+					"name" : "ext_rxfl",
+					"strict" : false
+				},
+				{
+					"name" : "LogicIn1",
+					"strict" : false
+				},
+				{
+					"name" : "LogicIn2",
 					"strict" : false
 				},
 				{

@@ -4,8 +4,9 @@
 -- 	1)Waveform duration
 --		2)Starting Voltage
 --		3)Slope
--- If duration comes in as x"FFFF", read_addr is reset (it is up to the user to design software to insert this)
+-- If duration comes in as x"FFFF", read_addr is reset to 0 (it is up to the user to design software to insert this)
 -- If duration comes in as x"FFFE", the 'running' state is paused to await for a new trigger ( " )
+-- If duration comes in as x"FFFD", then 'running' state continues but loops back to the start of memory. Don't give up, little DAC!
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
@@ -20,22 +21,23 @@ entity output_to_12bitDAC is
 	(
 		-- clks for incoming data and outputting to DAC
 		clk_dac			: in std_logic;
-		--clk_dac_wr		: in std_logic;
+		-- reset trigger for DAC process
+		iRST				: in std_logic;
 		
 		-- Data buses
 		data_in			: in std_logic_vector(15 downto 0); -- 16 bit data input for waveform data
 		dac_out			: out std_logic_vector(11 downto 0); -- 12 bit DAC output
 		
-		-- Logic to output new dac value
-		wr					: out std_logic; -- Data is valid to write when '0', initialize so dac is suspended
-		cs					: out std_logic; -- chip select DAC line, DAC active when '0', initialize so dac is suspended
-		
 		-- Memory address location for DAC data from memory
-		read_addr_out	: out std_logic_vector(13 downto 0);
+		read_addr_out	: out std_logic_vector(14 downto 0);
+		
+		-- Logic to output new dac value
+		wr_n				: out std_logic; -- Data is transparent to DAC when '0', initialize so dac is suspended
+		cs_n				: out std_logic; -- chip select DAC line, DAC active when '0'
 		
 		-- Input to begin running waveforms from FT245
 		run_cmd			: in std_logic;
-		-- Logic input to begin running waveforms
+		-- External logic input to begin running waveforms
 		run_trigger		: in std_logic
 	);
 
@@ -47,9 +49,10 @@ architecture rtl of output_to_12bitDAC is
 	-- SIGNALS
 	----------------------------------------------------------------------------------
 	
-	-- Write enable and chip select
+	-- Internal write enable and chip select
 	signal wr_i				: std_logic := '0';
 	signal cs_i				: std_logic := '0';
+	
 	-- Internal copy of the address for reading from memory
 	signal read_addr		: std_logic_vector((read_addr_out'length - 1) downto 0) := (others => '0');
 		
@@ -60,15 +63,16 @@ architecture rtl of output_to_12bitDAC is
 	-- BEGIN
 	----------------------------------------------------------------------------------
 begin
-
-	-- Latch internal read address
-	read_addr_out	<= read_addr;
+	
 	-- Latch writing to DAC
-	wr					<= not(wr_i);
-	cs					<= not(cs_i);
+	wr_n				<= not(wr_i);
+	cs_n				<= not(cs_i);
+	
+	-- Latch internal read address to output
+	read_addr_out	<= read_addr;
 	
 	-- interpret data for DAC
-	process (clk_dac, run_cmd, run_trigger)
+	process (clk_dac, run_cmd, run_trigger, iRST)
 	
 		-- States for the DAC
 		type DAC_STATES 				is (RESET, IDLE, RUNNING);
@@ -78,8 +82,8 @@ begin
 		type DAC_READ_MODES			is (READ_T, READ_V, READ_dV_float, READ_dV, DONE, NONE);
 		variable dac_read_mode		: DAC_READ_MODES := READ_T;
 		
-		-- Data coming in to be processed
-		variable data_processed		: std_logic_vector(15 downto 0);
+		-- Data communication for the waveform
+		variable data_comm			: std_logic_vector(15 downto 0);
 		
 		-- The following are internal values for outputting to the DAC waveform
 		-- Voltage values go 15 downto 4, we have 3 downto 0 to hold decimal points in lower bits
@@ -93,25 +97,30 @@ begin
 		
 		-- Counts how long a time step has been evaluating for
 		variable count					: std_logic_vector(15 downto 0);
+		-- Whether or not we need to be counting
 		variable timing				: std_logic;
 		
 	begin
-	
+		if iRST = '0' then
+			dac_state	:= RESET;
+			
+		else
 		if rising_edge(clk_dac) then
 			
 			case dac_state is
-			-- Return to boot conditions
-			when RESET =>
+			
+			when RESET => -- Return to boot conditions
 				dac_out			<= (others => '0');
+				read_addr		<= (others => '0');
 				wr_i				<= '0';
 				cs_i				<= '0';
 				dac_state		:= IDLE;
 				
-			-- Awaiting a run command
-			when IDLE =>				
+			
+			when IDLE => -- Awaiting a run command			
 				-- Prepare to begin reading data at start of 'running'
 				dac_read_mode	:= READ_T;
-				-- empty out coefficient while IDLE
+				-- empty out linear coefficient while IDLE
 				dac_dV_i			:= (others => '0');
 				-- No counting down when beginning to read a waveform
 				count				:= (others => '0');
@@ -128,30 +137,31 @@ begin
 				end if;
 
 				-- Prepare to enter the running process
-				if (run_cmd = '1' or run_trigger = '0') then
-					-- Hold in idle with no DAC update
+				if (run_cmd = '1' or run_trigger = '1') then
+					-- Start the waveform
 					dac_state	:= RUNNING;
 				else
-					-- Start the waveform
+					-- Wait for trigger
 					dac_state	:= IDLE;
 				end if;
 
-			-- RUNNING is interpreting data at the current address; the M9K RAM updates much faster, so no worries on timing with read_addr
-			when RUNNING =>
+			
+			when RUNNING => -- RUNNING is interpreting data at the current address
+				-- the M9K RAM updates much faster than this process, so no worries on timing with read_addr
 			
 				-- Activate DAC output
-				wr_i				<= '1';
-				-- Latch external data to be processed
-				data_processed	:= data_in;
+				wr_i			<= '1';
+				-- Latch external waveform data
+				data_comm	:= data_in;
 				
 				case dac_read_mode is							
 				when READ_T =>											
 					-- Read in the time to run the waveform
-					time_dac_read					:= data_processed;
+					time_dac_read					:= data_comm;
 					read_addr						<= read_addr + '1';
 					
 					-- Check if the time value flags the need to leave RUNNING
-					if data_processed >= x"FFFE" then
+					if data_comm >= x"FFFE" then
 						-- Await next run trigger
 						dac_state					:= IDLE;
 					else
@@ -161,23 +171,23 @@ begin
 					
 				when READ_V =>					
 					-- Read the voltage
-					dac_out_read					:= data_processed & x"0000";
+					dac_out_read					:= data_comm & x"0000";
 					read_addr						<= read_addr + '1';
 
 					-- Read in the slope
 					dac_read_mode					:= READ_dV_float;
 					
 				when READ_dV_float =>
-					-- Read linear fractional part
-					dac_dV_read(15 downto 0)	:= data_processed;
+					-- Read fractional linear part
+					dac_dV_read(15 downto 0)	:= data_comm;
 					read_addr						<= read_addr + '1';
 					
 					--Read the integer part
 					dac_read_mode					:= READ_dV;
 					
 				when READ_dV =>
-					-- Read slope
-					dac_dV_read(31 downto 16)	:= data_processed;
+					-- Read linear part
+					dac_dV_read(31 downto 16)	:= data_comm;
 					read_addr						<= read_addr + '1';
 					
 					-- Finished reading in this portion of waveform
@@ -189,11 +199,14 @@ begin
 					dac_out_i						:= dac_out_read;
 					dac_dV_i							:= dac_dV_read;
 					
-					if data_in >= x"FFFE" then
-						-- If the next data requires leaving this process, need to allow the waveform to finish and then break to IDLE
-						time_dac_i 					:= time_dac_i + 2;
+					-- If the next data requires waiting for a new trigger, need to allow the waveform to finish and then break to IDLE
+					if data_comm >= x"FFFE" then
+						time_dac_i 					:= time_dac_i + READ_TIME;
+					-- If we are in "continous run" mode, loop back to the start of memory but keep running
+					elsif data_comm = x"FFFD" then
+						read_addr					<= (others => '0');
+					-- Handling the case that time_dac_i - read_time < 0 to make sure we have time to load the next waveform in each step
 					elsif time_dac_i < READ_TIME then
-						-- Handling the case that time_dac_i - read_time < 0 to make sure we have time to load the next waveform in each step
 						time_dac_i					:= READ_TIME;
 					end if;
 					
@@ -210,12 +223,14 @@ begin
 					dac_read_mode					:= NONE;
 				end case;
 				
-				-- Alter dac_val_i from coefficients for next output
+				-- Generating waveforms!
+				-- Output the voltage
 				dac_out		<= dac_out_i(31 downto (32 - dac_out'length));
+				-- Alter dac_val_i from coefficients for next output
 				dac_out_i	:= dac_out_i + dac_dV_i;
 							
 				if timing = '1' then
-					if count > (time_dac_i - READ_TIME) then
+					if count >= (time_dac_i - READ_TIME) then
 						--Start getting ready for the next round of data
 						timing 				:= '0';
 						dac_read_mode		:= READ_T;
@@ -226,6 +241,7 @@ begin
 				end if;
 				
 			end case; 
+		end if;
 		end if;
 	end process;			
 	

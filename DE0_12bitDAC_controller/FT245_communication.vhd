@@ -22,7 +22,7 @@ entity FT245Comm is
 		-- Data output word
 		data_q			: out		std_logic_vector(15 downto 0);	-- Word for the rest of the system
 		-- Address for memory location for data
-		addr_comm_q		: out		std_logic_vector(13 downto 0);	-- address for writing to the M9K RAM
+		addr_comm_q		: out		std_logic_vector(14 downto 0);	-- address for writing to the M9K RAM
 		
 		-- Enable for different DAC memory blocks
 		chan0_wren		: out		std_logic;

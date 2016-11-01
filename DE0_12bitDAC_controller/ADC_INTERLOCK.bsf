@@ -48,8 +48,8 @@ agreement for further details.
 	(port
 		(pt 216 32)
 		(output)
-		(text "oLED[2..0]" (rect 0 0 44 12)(font "Arial" ))
-		(text "oLED[2..0]" (rect 151 27 195 39)(font "Arial" ))
+		(text "oLED[1..0]" (rect 0 0 43 12)(font "Arial" ))
+		(text "oLED[1..0]" (rect 152 27 195 39)(font "Arial" ))
 		(line (pt 216 32)(pt 200 32)(line_width 3))
 	)
 	(port
@@ -65,13 +65,6 @@ agreement for further details.
 		(text "oLOGIC1" (rect 0 0 37 12)(font "Arial" ))
 		(text "oLOGIC1" (rect 158 59 195 71)(font "Arial" ))
 		(line (pt 216 64)(pt 200 64)(line_width 1))
-	)
-	(port
-		(pt 216 80)
-		(output)
-		(text "oLOGIC2" (rect 0 0 38 12)(font "Arial" ))
-		(text "oLOGIC2" (rect 157 75 195 87)(font "Arial" ))
-		(line (pt 216 80)(pt 200 80)(line_width 1))
 	)
 	(drawing
 		(rectangle (rect 16 16 200 96)(line_width 1))

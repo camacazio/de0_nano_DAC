@@ -40,8 +40,8 @@ architecture rtl of ADC_CTRL is
 	signal prv_adc_data	: std_logic_vector(11 downto 0);	-- previous channel, complete data
 	signal prv_ch_read	: std_logic_vector(2 downto 0);	-- previous channel, used for data
 	
-	-- number of channels to be read-out
-	constant NUM_CHANS	: std_logic_vector(2 downto 0) := "010";
+	-- number of channels for scanning read-out
+	constant NUM_CHANS	: std_logic_vector(2 downto 0) := "001";
 
 	----------------------------------------------------------------------------------
 	-- BEGIN

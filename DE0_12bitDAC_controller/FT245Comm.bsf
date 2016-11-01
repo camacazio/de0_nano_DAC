@@ -62,8 +62,8 @@ agreement for further details.
 	(port
 		(pt 256 64)
 		(output)
-		(text "addr_comm_q[13..0]" (rect 0 0 83 12)(font "Arial" ))
-		(text "addr_comm_q[13..0]" (rect 152 59 235 71)(font "Arial" ))
+		(text "addr_comm_q[14..0]" (rect 0 0 84 12)(font "Arial" ))
+		(text "addr_comm_q[14..0]" (rect 151 59 235 71)(font "Arial" ))
 		(line (pt 256 64)(pt 240 64)(line_width 3))
 	)
 	(port
