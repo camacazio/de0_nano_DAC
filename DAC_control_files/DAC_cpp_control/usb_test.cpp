@@ -27,7 +27,7 @@ FT_STATUS USB_WaveDev::Open()
 FT_STATUS USB_WaveDev::Write(BYTE* wavePoint, DWORD size)
 {
 	// Write can be used to write a waveform or to send a reset command, etc
-	//std::cerr << "USB::WaveDev::Write() started" << std::endl;
+	//std::cout << "USB::WaveDev::Write() started" << std::endl;
 	return FT_Write(ftHandle, wavePoint, size, &written);
 }
 FT_STATUS USB_WaveDev::Close()
@@ -85,7 +85,7 @@ int USB_Waveform_Manager::GetDeviceIndexFromSerialNumber(string * mySerialNo) {
 	3) convert to a bit stream
 	4) write to a vector, little endian in words (the FPGA's VHDL code expects a lower word followed by a higher word)*/
 
-bool USB_Waveform_Manager::WvfFill(unsigned channel, unsigned step,
+bool USB_Waveform_Manager::WvfFill(unsigned channel, unsigned step, bool freerun,
 	std::vector<double> vTimeVals, std::vector<double> vCurVals, std::vector<double> vdVVals)
 {
 	// Indeces and temporary variables for writing to USBWVF data
@@ -161,6 +161,18 @@ bool USB_Waveform_Manager::WvfFill(unsigned channel, unsigned step,
 		ui = unsigned __int64((USB_BYTE_RANGE + 1)*((vdVVals[i] - vCurVals[i])*USB_BYTE_RANGE)/(nSteps*USB_MAX_VOLTAGE));
 		for (j = 0; j < 4; j++) {
 			// the integer part is broken into 4 words and put on the waveform step little endian
+			uc = BYTE(ui);
+			wvfchanstep.push_back(uc);
+			ui = ui >> 8;
+		}
+	}
+
+	// If in freerun, signify end of the step to FPGA with the op-code to loop back to the start of the waveform
+	if (freerun == TRUE)
+	{
+		ui = unsigned __int64(USB_BYTE_RANGE - 2);
+		for (j = 0; j < 2; j++) {
+			// the data is broken into 2 words and put on the waveform step little endian
 			uc = BYTE(ui);
 			wvfchanstep.push_back(uc);
 			ui = ui >> 8;
@@ -264,7 +276,7 @@ bool USB_Waveform_Manager::WvfWrite(unsigned channel) {
 		*pInit = 0x02;
 
 		// Write the initialization waveform part to the device
-		std::cerr << "Write the initialization waveform part to the device (USbWaveDevList[].Write)" << std::endl;
+		std::cout << "Write the initialization waveform part to the device (USbWaveDevList[].Write)" << std::endl;
 		if(USBWaveDevList.size()){
 			if (USB_Waveform_Manager::USBWaveDevList[devIndex].Write(&initWave[0], (DWORD) sizeof(initWave)) == FT_OK) {
 				// No errors detected
@@ -278,7 +290,7 @@ bool USB_Waveform_Manager::WvfWrite(unsigned channel) {
 		// For the channel specified, the data in the channel is sent to the FPGA
 		// Send one BYTE at a time, and loop through the BYTE vector in a step for each step in a channel
 		// Iterate across the channel, writing in all the steps of the waveform
-		std::cerr << "Sending the data in the channel to the FPGA (USbWaveDevList[].Write)" << std::endl;
+		std::cout << "Sending the data in the channel to the FPGA (USbWaveDevList[].Write)" << std::endl;
 		if(USBWaveDevList.size()){
 			for(USBWVF_channel::iterator its = USBWvf[channel].begin(); its != USBWvf[channel].end(); ++its) {
 				if(!(its->second).empty()) {
@@ -314,7 +326,7 @@ bool USB_Waveform_Manager::WvfWrite(unsigned channel) {
 		}
 
 	}
-	std::cerr << "Returning from USB_Waveform_Manager::WvfWrite with 'true'" << std::endl;
+	std::cout << "Returning from USB_Waveform_Manager::WvfWrite with 'true'" << std::endl;
 	return true;
 }
 
@@ -360,7 +372,7 @@ bool USB_Waveform_Manager::WvfRun(unsigned channel) {
 			return false;
 		}
 	}
-	std::cerr << "Returning from USB_Waveform_Manager::WvfRun with 'true'" << std::endl;
+	std::cout << "Returning from USB_Waveform_Manager::WvfRun with 'true'" << std::endl;
 	return true;
 }
 
@@ -469,7 +481,8 @@ int main()
 	// Flags for loops
 	bool running = TRUE;
 	bool write = FALSE;
-	int loading = 0;
+	bool loading = FALSE;
+	bool freerun = FALSE;
 	unsigned channel = 0;
 	unsigned step = 0;
 	// input for function selection
@@ -489,7 +502,7 @@ int main()
 		vdV.clear();
 		step = 0;
 		// Here, one can set some options for the desired channel and step for the waveform
-		std::cout << "\n<c> Set working channel\n<f> Read waveform from file\n<v> Set constant voltage\n<r> Run waveform\n<q> Quit\t\t\t>> ";
+		std::cout << "\n<c>hannel select\n<m>ode for waveforms\n<w>aveform from files\n<s>et constant voltage\n<r>un waveform\n<q>uit\t\t\t>> ";
 		std::cin >> mychar;
 
 		switch (mychar)
@@ -504,11 +517,21 @@ int main()
 			}
 			break;
 
-		case 'f':
-			loading = 1;
-			while (loading == 1) {
+		case 'm':
+			std::cout << "<t>rigger mode or <f>reerun mode: ";
+			std::cin >> mychar;
+			switch (mychar) {
+			case 'f': freerun = TRUE;
+				break;
+			case 't': freerun = FALSE;
+				break;}
+			break;
+
+		case 'w':
+			loading = TRUE;
+			while (loading == TRUE) {
 				// in same folder as executable, include extension
-				std::cout << "Enter filename:" << std::endl;
+				std::cout << "Enter local filename (including file type extension):" << std::endl;
 				std::cin >> waveformfile;
 
 				if (waveformfile != "") // check whether file name is valid
@@ -521,7 +544,7 @@ int main()
 					// array of data from file
 					darray[0] = darray[1] = darray[2] = 0;
 
-					if (wfstream.is_open()) // put into loop, until file is really open, or user chooses break
+					if (wfstream.is_open()) // put into loop to read data
 					{
 						while (getline(wfstream, line))
 						{
@@ -568,23 +591,31 @@ int main()
 					}
 
 					// Store the data for transmit
-					std::cerr << "\nFill Waveform ( calling USB_Waveform_Manager::WvfFill(...) )" << std::endl;
-					USB_Waveform_Manager::WvfFill(channel, step, vTime, vVals, vdV);
+					std::cout << "\nFill Waveform ( calling USB_Waveform_Manager::WvfFill(...) )" << std::endl;
+					USB_Waveform_Manager::WvfFill(channel, step, freerun, vTime, vVals, vdV);
 					vTime.clear();
 					vVals.clear();
 					vdV.clear();
 					step++;
 
 					// Flag whether or not we are done
-					std::cout << "Load more files? <1> yes, <0> no: ";
-					std::cin >> loading;
+					if (freerun == FALSE)
+					{
+						std::cout << "Load more waveform steps from file? <y> yes, <n> no: ";
+						std::cin >> mychar;
+						switch (mychar) {
+						case 'y': loading = TRUE;
+							break;
+						case 'n': loading = FALSE;
+							break;}
+					}
 				}
 			}
 			// flag the need to write the data
 			write = TRUE;
 			break;
 
-		case 'v':
+		case 's':
 			// set a contant voltage
 			double voltage;
 			std::cout << "Set Voltage (0 to 10): ";
@@ -595,8 +626,8 @@ int main()
 			vdV.push_back(voltage);
 
 			// Store the data for transmit
-			std::cerr << "\nFill Waveform ( calling USB_Waveform_Manager::WvfFill(...) )" << std::endl;
-			USB_Waveform_Manager::WvfFill(channel, step, vTime, vVals, vdV);
+			std::cout << "\nFill Waveform ( calling USB_Waveform_Manager::WvfFill(...) )" << std::endl;
+			USB_Waveform_Manager::WvfFill(channel, step, freerun, vTime, vVals, vdV);
 
 			// flag the need to write the data
 			write = TRUE;
@@ -607,13 +638,18 @@ int main()
 			USB_Waveform_Manager::WvfRun(channel);
 			break;
 
-		default:
+		case 'q':
+			// Quit the program and proceed to closing the USB connection
 			running = FALSE;
+			break;
+
+		default:
+			std::cout << "\nInvalid Selection\n";
 		}
 
 		if (write) {
 			// Transmit waveform data
-			std::cerr << "Transmit waveform data ( Calling USB_Waveform_Manager::WvfWrite(...) )" << std::endl;
+			std::cout << "Transmit waveform data ( Calling USB_Waveform_Manager::WvfWrite(...) )" << std::endl;
 			USB_Waveform_Manager::WvfWrite(channel);
 			// clear the flag
 			write = FALSE;
@@ -625,16 +661,16 @@ int main()
 
 	// -------------------------------
 
-	std::cerr << "Close devices" << std::endl;
+	std::cout << "Close devices" << std::endl;
     // Close each device found
 	if (DACtotal > 0) {
 		for (unsigned i = 0; i < DACtotal; i++) {
 			if (USB_Waveform_Manager::CloseDevice(i) == FT_OK) {
-				std::cerr << "No errors detected. Exit" << std::endl;
+				std::cout << "No errors detected. Exit" << std::endl;
 				// No errors detected
 			}
 			else {
-				std::cerr << "Error closing DAC controller" << std::endl;
+				std::cout << "Error closing DAC controller" << std::endl;
 				return -123401;
 
 			}

@@ -16,8 +16,8 @@ Header file for defining a class for the USB-controlled FPGA waveform cards
 #define USB_BYTE_RANGE 65535 // max number for positive values: unsigned 16-bit
 #define USB_MAX_VOLTAGE 10.0 // max voltage value taken at USB_BYTE_RANGE
 #define USB_DAC_UPDATE 0.0005 // all times should be in milliseconds
-#define MIN_LINE_TIME 0.002 // in milliseconds, set by the time it takes to read in the starting voltage and duration (4 clock cycles)
-#define MAX_LINE_TIME 32.600 // 32.6 milliseconds per waveform line; overhead is reserved to allow higher time values to be "op-codes" in memory
+#define MIN_LINE_TIME 0.000 // in milliseconds, set by the time it takes to read in the starting voltage and duration (4 clock cycles), VHDL-side handles too short of duration
+#define MAX_LINE_TIME 32.600 // 32.6 milliseconds per waveform line; higher time values are reserved to be "op-codes" in memory
 
 #define MIN_VOLTAGE 0.0
 #define MAX_VOLTAGE 10.0
@@ -80,7 +80,7 @@ public:
 
 //private:
 	// Fill out the data in a waveform as bytes derived from vectors sent from a waveform file
-	static bool WvfFill(unsigned channel, unsigned step,
+	static bool WvfFill(unsigned channel, unsigned step, bool freerun,
 		std::vector<double> vTimeVals, std::vector<double> vCurVals, std::vector<double> vdVVals);
 
 	// Write a channel of data to a device
