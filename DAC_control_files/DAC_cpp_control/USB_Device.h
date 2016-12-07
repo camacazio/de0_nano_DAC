@@ -1,26 +1,33 @@
 /*
 Header file for defining a class for the USB-controlled FPGA waveform cards
 */
-#pragma once
 
 #include <vector> //needed for the vector of devices
 #include <map> //needed for the waveform channel map
+#include <bitset> // For displaying the binary version of a logic sequence
 #include <string> // needed for parsing the device initalization list in fpgart.cpp from a defined list
+#include <math.h> // for rounding for converting derivatives
 #include <wtypes.h> //needed for certain variable types in FTD2XX.H
 #include "FTD2XX.H" // Header file for USB controls and types
 
 // Parse by white space, listing serial numbers and number of dacs on that serial number
 // "Serial# #DACs Serial# #DACs ..."
-#define USB_DEVICE_LIST "TESTER00 2"
+#define USB_DEVICE_LIST "DACBRD01 3 DACBRD02 3 DACBRD03 3 DACBRD04 3"
 
+// Waveform information
 #define USB_BYTE_RANGE 65535 // max number for positive values: unsigned 16-bit
-#define USB_MAX_VOLTAGE 10.0 // max voltage value taken at USB_BYTE_RANGE
+#define USB_MAX_VOLTAGE 10.0 // voltage value at USB_BYTE_RANGE
 #define USB_DAC_UPDATE 0.0005 // all times should be in milliseconds
-#define MIN_LINE_TIME 0.000 // in milliseconds, set by the time it takes to read in the starting voltage and duration (4 clock cycles), VHDL-side handles too short of duration
-#define MAX_LINE_TIME 32.600 // 32.6 milliseconds per waveform line; higher time values are reserved to be "op-codes" in memory
-
+#define MIN_LINE_TIME 0.002 // in milliseconds, set by the time it takes to read in the starting voltage and duration (4 clock cycles), VHDL-side handles too short of duration as well
+#define MAX_LINE_TIME 32.765 // 32.765 milliseconds per waveform line; higher time values up to (2^16-1) are reserved to be "op-codes" in memory
+// Voltage ranges
 #define MIN_VOLTAGE 0.0
 #define MAX_VOLTAGE 10.0
+
+// Logic vector information
+#define LOG_UPDATE 0.0001 // all times should be in milliseconds
+#define MIN_LOGIC_TIME 0.0002 // set by the time to read in the next logic vector and duration (2 clock cycles)
+#define MAX_LOGIC_TIME 1677.72 // 1.67772 seconds, in milliseconds, per logic update step with overhead for op-codes
 
 // Some typedef's for the USB data vectors
 typedef	std::vector<BYTE> USBWVF_data;
@@ -82,6 +89,10 @@ public:
 	// Fill out the data in a waveform as bytes derived from vectors sent from a waveform file
 	static bool WvfFill(unsigned channel, unsigned step, bool freerun,
 		std::vector<double> vTimeVals, std::vector<double> vCurVals, std::vector<double> vdVVals);
+
+	// Fill out the data in a logic vector as bytes derived from vectors sent from a logic definition file
+	static bool LogicFill(unsigned channel, unsigned step,
+		std::vector<double> vTimeVals, std::vector<double> vLogicVals);
 
 	// Write a channel of data to a device
 	static bool WvfWrite(unsigned channel);

@@ -45,8 +45,8 @@ ENTITY onchip_memory IS
 	(
 		clock		: IN STD_LOGIC  := '1';
 		data		: IN STD_LOGIC_VECTOR (15 DOWNTO 0);
-		rdaddress		: IN STD_LOGIC_VECTOR (14 DOWNTO 0);
-		wraddress		: IN STD_LOGIC_VECTOR (14 DOWNTO 0);
+		rdaddress		: IN STD_LOGIC_VECTOR (13 DOWNTO 0);
+		wraddress		: IN STD_LOGIC_VECTOR (13 DOWNTO 0);
 		wren		: IN STD_LOGIC  := '0';
 		q		: OUT STD_LOGIC_VECTOR (15 DOWNTO 0)
 	);
@@ -69,16 +69,16 @@ BEGIN
 		clock_enable_output_b => "BYPASS",
 		intended_device_family => "Cyclone IV E",
 		lpm_type => "altsyncram",
-		numwords_a => 16896,
-		numwords_b => 16896,
+		numwords_a => 16384,
+		numwords_b => 16384,
 		operation_mode => "DUAL_PORT",
 		outdata_aclr_b => "NONE",
 		outdata_reg_b => "CLOCK0",
 		power_up_uninitialized => "FALSE",
 		ram_block_type => "M9K",
 		read_during_write_mode_mixed_ports => "OLD_DATA",
-		widthad_a => 15,
-		widthad_b => 15,
+		widthad_a => 14,
+		widthad_b => 14,
 		width_a => 16,
 		width_b => 16,
 		width_byteena_a => 1
@@ -129,7 +129,7 @@ END SYN;
 -- Retrieval info: PRIVATE: JTAG_ENABLED NUMERIC "0"
 -- Retrieval info: PRIVATE: JTAG_ID STRING "NONE"
 -- Retrieval info: PRIVATE: MAXIMUM_DEPTH NUMERIC "0"
--- Retrieval info: PRIVATE: MEMSIZE NUMERIC "270336"
+-- Retrieval info: PRIVATE: MEMSIZE NUMERIC "262144"
 -- Retrieval info: PRIVATE: MEM_IN_BITS NUMERIC "0"
 -- Retrieval info: PRIVATE: MIFfilename STRING ""
 -- Retrieval info: PRIVATE: OPERATION_MODE NUMERIC "2"
@@ -166,27 +166,27 @@ END SYN;
 -- Retrieval info: CONSTANT: CLOCK_ENABLE_OUTPUT_B STRING "BYPASS"
 -- Retrieval info: CONSTANT: INTENDED_DEVICE_FAMILY STRING "Cyclone IV E"
 -- Retrieval info: CONSTANT: LPM_TYPE STRING "altsyncram"
--- Retrieval info: CONSTANT: NUMWORDS_A NUMERIC "16896"
--- Retrieval info: CONSTANT: NUMWORDS_B NUMERIC "16896"
+-- Retrieval info: CONSTANT: NUMWORDS_A NUMERIC "16384"
+-- Retrieval info: CONSTANT: NUMWORDS_B NUMERIC "16384"
 -- Retrieval info: CONSTANT: OPERATION_MODE STRING "DUAL_PORT"
 -- Retrieval info: CONSTANT: OUTDATA_ACLR_B STRING "NONE"
 -- Retrieval info: CONSTANT: OUTDATA_REG_B STRING "CLOCK0"
 -- Retrieval info: CONSTANT: POWER_UP_UNINITIALIZED STRING "FALSE"
 -- Retrieval info: CONSTANT: RAM_BLOCK_TYPE STRING "M9K"
 -- Retrieval info: CONSTANT: READ_DURING_WRITE_MODE_MIXED_PORTS STRING "OLD_DATA"
--- Retrieval info: CONSTANT: WIDTHAD_A NUMERIC "15"
--- Retrieval info: CONSTANT: WIDTHAD_B NUMERIC "15"
+-- Retrieval info: CONSTANT: WIDTHAD_A NUMERIC "14"
+-- Retrieval info: CONSTANT: WIDTHAD_B NUMERIC "14"
 -- Retrieval info: CONSTANT: WIDTH_A NUMERIC "16"
 -- Retrieval info: CONSTANT: WIDTH_B NUMERIC "16"
 -- Retrieval info: CONSTANT: WIDTH_BYTEENA_A NUMERIC "1"
 -- Retrieval info: USED_PORT: clock 0 0 0 0 INPUT VCC "clock"
 -- Retrieval info: USED_PORT: data 0 0 16 0 INPUT NODEFVAL "data[15..0]"
 -- Retrieval info: USED_PORT: q 0 0 16 0 OUTPUT NODEFVAL "q[15..0]"
--- Retrieval info: USED_PORT: rdaddress 0 0 15 0 INPUT NODEFVAL "rdaddress[14..0]"
--- Retrieval info: USED_PORT: wraddress 0 0 15 0 INPUT NODEFVAL "wraddress[14..0]"
+-- Retrieval info: USED_PORT: rdaddress 0 0 14 0 INPUT NODEFVAL "rdaddress[13..0]"
+-- Retrieval info: USED_PORT: wraddress 0 0 14 0 INPUT NODEFVAL "wraddress[13..0]"
 -- Retrieval info: USED_PORT: wren 0 0 0 0 INPUT GND "wren"
--- Retrieval info: CONNECT: @address_a 0 0 15 0 wraddress 0 0 15 0
--- Retrieval info: CONNECT: @address_b 0 0 15 0 rdaddress 0 0 15 0
+-- Retrieval info: CONNECT: @address_a 0 0 14 0 wraddress 0 0 14 0
+-- Retrieval info: CONNECT: @address_b 0 0 14 0 rdaddress 0 0 14 0
 -- Retrieval info: CONNECT: @clock0 0 0 0 0 clock 0 0 0 0
 -- Retrieval info: CONNECT: @data_a 0 0 16 0 data 0 0 16 0
 -- Retrieval info: CONNECT: @wren_a 0 0 0 0 wren 0 0 0 0

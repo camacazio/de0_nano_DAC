@@ -34,11 +34,11 @@ architecture rtl of ADC_CTRL is
 	signal go_en			: std_logic;			-- disabled when reset is triggered
 	signal count			: std_logic_vector(3 downto 0);		-- count serial clock edges up to 16
 	signal n_count			: std_logic_vector(3 downto 0);		-- count serial clock falling edges up to 16
-	signal ch_count		: std_logic_vector(2 downto 0);		-- declare new varible ch_count, counting to select channel.
+	signal ch_count		: std_logic_vector(2 downto 0);		-- counting up to NUM_CHANS
 	signal ch_reading		: std_logic_vector(2 downto 0) := (others => '0');		-- the channel currently being read; one read cycle delay
 	signal adc_data		: std_logic_vector(11 downto 0);		-- data being read
-	signal prv_adc_data	: std_logic_vector(11 downto 0);	-- previous channel, complete data
-	signal prv_ch_read	: std_logic_vector(2 downto 0);	-- previous channel, used for data
+	signal prv_adc_data	: std_logic_vector(11 downto 0);		-- previous channel, complete data
+	signal prv_ch_read	: std_logic_vector(2 downto 0);		-- previous channel, used for data
 	
 	-- number of channels for scanning read-out
 	constant NUM_CHANS	: std_logic_vector(2 downto 0) := "001";
@@ -48,10 +48,12 @@ architecture rtl of ADC_CTRL is
 	----------------------------------------------------------------------------------
 begin
 
-	-- latches
+	-- latches for ADC line
 	oCS_n			<= not(go_en);		-- activate ADC unless reset is flagged
 	oSCLK			<= iCLK when go_en = '1' else '1'; -- Send clock signal to ADC clock if go_en is 1
-	oADC_ADDR	<= data;			-- latch channel select bit
+	oADC_ADDR	<= data;				-- latch channel select bit
+	
+	-- latches for the data from the ADC
 	oadc_data	<= prv_adc_data;	-- latch completed reading
 	oadc_chan	<= prv_ch_read;	-- latch completed channel
 
@@ -59,7 +61,7 @@ begin
 -- Check for reseting the ADC reading, or to continue
 process(iCLK, iRST)
 begin
-	if(iRST = '0') then -- If iRST is triggered
+	if iRST = '0' then -- If iRST is triggered
 		go_en	<=	'0'; 
 	else
 		if rising_edge(iCLK) then -- at the first positive clock edge

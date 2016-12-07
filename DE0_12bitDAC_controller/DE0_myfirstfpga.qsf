@@ -77,7 +77,7 @@ set_location_assignment PIN_F14 -to ext_data[4]
 set_location_assignment PIN_G15 -to ext_data[0]
 set_location_assignment PIN_E15 -to ext_rxfl
 set_location_assignment PIN_B16 -to ext_rdl
-set_global_assignment -name RESERVE_FLASH_NCE_AFTER_CONFIGURATION "AS INPUT TRI-STATED"
+set_global_assignment -name RESERVE_FLASH_NCE_AFTER_CONFIGURATION "USE AS REGULAR IO"
 set_global_assignment -name CYCLONEII_RESERVE_NCEO_AFTER_CONFIGURATION "USE AS REGULAR IO"
 set_location_assignment PIN_E8 -to DAC1_wr
 set_location_assignment PIN_F9 -to DAC1_cs
@@ -118,25 +118,31 @@ set_location_assignment PIN_B3 -to DAC0_output[6]
 set_location_assignment PIN_A2 -to DAC0_output[5]
 
 set_global_assignment -name STRATIXV_CONFIGURATION_SCHEME "PASSIVE SERIAL"
+set_location_assignment PIN_E1 -to button1
+set_location_assignment PIN_A10 -to ADC_CS_n
+set_location_assignment PIN_B10 -to ADC_DIN
+set_location_assignment PIN_B14 -to ADC_SCLK
+set_location_assignment PIN_A9 -to ADC_DOUT
+set_global_assignment -name VHDL_FILE logic_processor.vhd
 set_global_assignment -name QIP_FILE onchip_memory.qip
 set_global_assignment -name VHDL_FILE FT245_communication.vhd
 set_global_assignment -name BDF_FILE DE0_myfirstfpga.bdf
 set_global_assignment -name SDC_FILE DE0_myfirstfpga.out.sdc
 set_global_assignment -name VHDL_FILE output_to_DAC.vhd
 set_global_assignment -name QIP_FILE comm_pll.qip
-set_location_assignment PIN_D6 -to LogicOut1
-set_location_assignment PIN_C6 -to LogicOut2
-set_location_assignment PIN_E6 -to LogicOut3
-set_location_assignment PIN_D8 -to LogicOut4
-set_location_assignment PIN_C8 -to LogicIn1
-set_location_assignment PIN_E7 -to LogicIn2
 set_global_assignment -name QIP_FILE dac_pll.qip
 set_global_assignment -name VHDL_FILE adc_data.vhd
-set_location_assignment PIN_E1 -to button1
-set_location_assignment PIN_A10 -to ADC_CS_n
-set_location_assignment PIN_B10 -to ADC_DIN
-set_location_assignment PIN_B14 -to ADC_SCLK
-set_location_assignment PIN_A9 -to ADC_DOUT
 set_global_assignment -name VHDL_FILE adc_interlock.vhd
 set_global_assignment -name QIP_FILE adc_pll.qip
+set_global_assignment -name QIP_FILE logic_mem.qip
+set_location_assignment PIN_D6 -to LogicOut[0]
+set_location_assignment PIN_C6 -to LogicOut[1]
+set_location_assignment PIN_E6 -to LogicOut[2]
+set_location_assignment PIN_D8 -to LogicOut[3]
+set_location_assignment PIN_C8 -to LogicIn[0]
+set_location_assignment PIN_E7 -to LogicIn[1]
+set_global_assignment -name RESERVE_DATA0_AFTER_CONFIGURATION "USE AS REGULAR IO"
+set_global_assignment -name RESERVE_DATA1_AFTER_CONFIGURATION "USE AS REGULAR IO"
+set_global_assignment -name RESERVE_DCLK_AFTER_CONFIGURATION "USE AS REGULAR IO"
+set_global_assignment -name CDF_FILE output_files/chain.cdf
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

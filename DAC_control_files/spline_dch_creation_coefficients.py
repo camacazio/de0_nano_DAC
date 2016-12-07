@@ -15,11 +15,12 @@ def wvf_interpolate(times, voltages, knot_frequency):
     as desired by the fpga
     """
 
-    ## For hfGUI purposes here, I will only be using cubic splines
-    mode = 3
+    ## For hfGUI purposes, I will only be using cubic splines
+	## For DE0-Nano DAC purposes, I will only be using linear splines
+    mode = 1
 
     derivatives = ()
-    if mode in (2, 3):
+    if mode in (1,2,3):
         ## Create a knot vector
         time_pts = times[::knot_frequency]
         voltage_pts = voltages[::knot_frequency]
@@ -40,11 +41,11 @@ def wvf_interpolate(times, voltages, knot_frequency):
     """
     Comment this plotting part out to speed up run-time
     """
-#    tnew = np.arange(times[1],times[-1],.1)
-#    vnew = interpolate.splev(tnew,spline,der=0)
-#    plt.figure()
-#    plt.plot(times, voltages, 'r', tnew, vnew, 'b')
-#    plt.show()
+    tnew = np.arange(times[1],times[-1],0.1)
+    vnew = interpolate.splev(tnew,spline,der=0)
+    plt.figure()
+    plt.plot(times, voltages, 'r', tnew, vnew, 'b')
+    plt.show()
     """
     """
 
@@ -59,8 +60,8 @@ def spline_write(times, voltages, derivatives, channel, wvf_name, branch, timeSc
     """
 
     ## A constant electrode number offset
-    chan_start = 1
-    chan = channel + chan_start
+    #chan_start = 1
+    #chan = channel + chan_start
     
     ## Make an h vector out of delta-t
     h = np.zeros(len(times)-1)
@@ -71,17 +72,23 @@ def spline_write(times, voltages, derivatives, channel, wvf_name, branch, timeSc
     ## Computed by matching t^n terms for the spline with that of the FPGA's
     ## discrete summed polynomial
 
-    file_handle.write('wvfcdef({0}_{1}, {2}, {3})\n'.format(wvf_name, chan, chan, branch))
+    # file_handle.write('wvfcdef({0}_{1}, {2}, {3})\n'.format(wvf_name, chan, chan, branch))
+
+    # # .dch spline data from spline derivatives
+    # for i in range(0,len(h)):
+        # file_handle.write('{0:.4f}\t{1:.4f}\t{2:.4f}\t{3:.4f}\t{4:.4f};\n'.format(
+            # (times[i] + h[i])*timeScale, voltages[i],
+            # h[i]*(derivatives[0][i]-derivatives[1][i]/2+derivatives[2][i]/6),
+            # h[i]*(h[i]+1)*(derivatives[1][i]-derivatives[2][i])/2,
+            # h[i]*(h[i]+1)*(h[i]+2)*derivatives[2][i]/6 ))
+    
+    # file_handle.write('wvfend\n\n')
 
     # .dch spline data from spline derivatives
     for i in range(0,len(h)):
-        file_handle.write('[{0:.4f}] {1:.4f},{2:.4f},{3:.4f},{4:.4f};\n'.format(
+        file_handle.write('{0:.4f} {1:.4f} {2:.4f}\n'.format(
             (times[i] + h[i])*timeScale, voltages[i],
-            h[i]*(derivatives[0][i]-derivatives[1][i]/2+derivatives[2][i]/6),
-            h[i]*(h[i]+1)*(derivatives[1][i]-derivatives[2][i])/2,
-            h[i]*(h[i]+1)*(h[i]+2)*derivatives[2][i]/6 ))
-    
-    file_handle.write('wvfend\n\n')
-
+            (voltages[i]+derivatives[0][i]*h[i])))
+			
     ## Done writing this waveform channel
     return None

@@ -22,15 +22,17 @@ entity FT245Comm is
 		-- Data output word
 		data_q			: out		std_logic_vector(15 downto 0);	-- Word for the rest of the system
 		-- Address for memory location for data
-		addr_comm_q		: out		std_logic_vector(14 downto 0);	-- address for writing to the M9K RAM
+		addr_comm_q		: out		std_logic_vector(13 downto 0);	-- address for writing to the M9K RAM
 		
 		-- Enable for different DAC memory blocks
 		chan0_wren		: out		std_logic;
 		chan1_wren		: out		std_logic;
+		logic_wren		: out		std_logic;
 		
 		-- USB command to run operations in rest of system
 		run_wave0		: out		std_logic;
-		run_wave1		: out		std_logic
+		run_wave1		: out		std_logic;
+		run_logic		: out		std_logic
 	);
 	
 end entity;
@@ -50,7 +52,7 @@ architecture Behavioral of FT245Comm is
 	-- Enables writing to the chosen channel's M9K
 	signal chanx_wren			: std_logic := '0';
 	
-	-- Enables running waveforms to the chosen channel
+	-- Enables running sequences to the chosen channel
 	signal run_wavex			: std_logic := '0';
 		
 	----------------------------------------------------------------------------------
@@ -66,10 +68,15 @@ begin
 	-- Latch the 'write enable' for memory depending on channel
 	chan0_wren	<= chanx_wren when channel = x"00" else '0';
 	chan1_wren	<= chanx_wren when channel = x"01" else '0';
+	-- For the case that data is being transmitted for pulse sequencing
+	logic_wren	<= chanx_wren when channel = x"02" else '0';
 	
+	-- Running the next waveform via communication channel
 	run_wave0	<= run_wavex when channel = x"00" else '0';
 	run_wave1	<= run_wavex when channel = x"01" else '0';
-					
+	-- run logic sequencing
+	run_logic	<= run_wavex when channel = x"02" else '0';
+	
 	process (clk_comm, comm_rxfl)
 		
 		-- Define FSM
@@ -91,15 +98,16 @@ begin
 		
 		-- Command states list
 		
+		-- Commands for writing data to memory
      	-- Sets burst length
 		constant CMD_BURST			: std_logic_vector(7 downto 0) := x"00";
 		-- Write waveform data
 		constant CMD_WRITESINGLE 	: std_logic_vector(7 downto 0) := x"01";
-		constant CMD_WRITEBURST 	: std_logic_vector(7 downto 0) := x"02";		
+		constant CMD_WRITEBURST 	: std_logic_vector(7 downto 0) := x"02";
 		-- Input the address to begin writing in memory
 		constant CMD_SETADDR	 		: std_logic_vector(7 downto 0) := x"03";
 		-- Select system channel to receive data
-		constant CMD_CHANNEL			: std_logic_vector(7 downto 0) := x"04";
+		constant CMD_CHANNEL			: std_logic_vector(7 downto 0) := x"04";		
 		-- Run the wave via USB connection
 		constant CMD_RUNWAVE			: std_logic_vector(7 downto 0) := x"05";
 		
@@ -107,11 +115,13 @@ begin
 		if rising_edge(clk_comm) then
 			case comm_state is
 			when RESET =>
-				-- These are the same as the default values when these are defined
+				-- Clear values to default
 				comm_rdl				<= '1';
 				addr_comm			<= (others => '0');
 				chanx_wren			<= '0';
+				run_wavex			<= '0';
 				count					:= (others => '0');
+				run_count			:= (others => '0');
 				inc_addr				:= '0';
 				command 				:= NONE;
 				
@@ -131,20 +141,19 @@ begin
 					comm_state 		:= IDLE;
 				end if;
 				
-				-- At end of WRITE2, wren line should have been raised, now reset here
+				-- At end of WRITE2, wren line should have been raised, now clear here
 				chanx_wren		<= '0';
-				-- If flagged, increment address (this is after the current clock cycle)
+				-- Running waveforms, reset the trigger after a wait period
+				if run_wavex = '1' then
+					run_count	:= run_count + 1;
+					if run_count = 0 then
+						run_wavex	<= '0';
+					end if;
+				end if;
+				
+				-- If flagged, increment address for writing location
 				addr_comm 		<= addr_comm + inc_addr;
 				inc_addr			:= '0';
-				
-				-- Halt the flag to run waveforms after a count-down
-				if run_count > "00" then
-					run_wavex	<= '1';
-					run_count   := run_count - 1;
-				else
-					-- No running waveforms
-					run_wavex	<= '0';
-				end if;
 		
 			-- RECEIVE cycle. RECEIVE->IDLE->RECEIVE->...->IDLE
 		   when RECEIVE =>
@@ -182,9 +191,8 @@ begin
 						when CMD_CHANNEL => -- Following byte sets the communication channel for a device
 							command			:= CHANNEL1;
 							
-						when CMD_RUNWAVE => -- Flag to run waveforms or other operations on DACs
+						when CMD_RUNWAVE => -- Flag to run waveforms or other operations
 							run_wavex		<= '1';
-							run_count		:= "11";
 							command	 		:= NONE;					
 						
 						-- unkown command; ignore

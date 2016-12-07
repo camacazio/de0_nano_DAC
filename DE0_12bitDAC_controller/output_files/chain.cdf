@@ -4,7 +4,7 @@ JedecChain;
 	DefaultMfr(6E);
 
 	P ActionCode(Cfg)
-		Device PartName(EP4CE22F17) Path("C:/Users/bowler/Documents/Altera/DE0_12bitDAC_controller/output_files/") File("DE0_myfirstfpga.sof") MfrSpec(OpMask(1));
+		Device PartName(EP4CE22F17) Path("C:/Users/bowler/Documents/de0_nano_DAC/de0_nano_DAC/DE0_12bitDAC_controller/output_files/") File("DE0_myfirstfpga.sof") MfrSpec(OpMask(1));
 
 ChainEnd;
 

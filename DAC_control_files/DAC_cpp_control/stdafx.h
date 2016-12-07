@@ -2,8 +2,6 @@
 // or project specific include files that are used frequently, but
 // are changed infrequently
 
-#pragma once
-
 #include <iostream> //for cin and cout
 #include <fstream> // for reading files
 #include <sstream> // needed for interpreting files

@@ -10,7 +10,7 @@ use IEEE.NUMERIC_STD.ALL;
 -- Physical ports to the entity
 entity ADC_INTERLOCK is
 	port (
-			iLOGIC_CLK		: in std_logic; -- clock rate, matches adc process
+			iLOGIC_CLK		: in std_logic; -- clock rate
 			iADC_data		: in std_logic_vector(11 downto 0);
 			iCH_count		: in std_logic_vector(2 downto 0);
 
@@ -25,12 +25,12 @@ architecture rtl of ADC_INTERLOCK is
 	----------------------------------------------------------------------------------
 	-- SIGNALS
 	----------------------------------------------------------------------------------
-	signal	LOGIC0		: std_logic;	-- channel 0 trigger
-	signal	LOGIC1		: std_logic;	-- channel 1 trigger
-	signal	led			: std_logic_vector(1 downto 0);		-- lights for each channel	
+	signal	LOGIC0		: std_logic := '1';					-- channel 0 value
+	signal	LOGIC1		: std_logic := '1';					-- channel 1 value
+	signal	led			: std_logic_vector(1 downto 0);	-- lights for each channel	
 
-	-- threshold value, measured based on ADC values, may need to be different for each channel
-	constant ADC_THRESHOLD : std_logic_vector(11 downto 0) := "100000000000";
+	-- threshold value, measured based on ADC values at 1/3, may need to be different for each channel
+	constant ADC_THRESHOLD : std_logic_vector(11 downto 0) := "010101010101";
 
 	----------------------------------------------------------------------------------
 	-- BEGIN
@@ -51,7 +51,7 @@ begin
 			-- update logic to be 'off' if the ADC data is below a threshold
 			if(iCH_count = "000") then
 				if(iADC_data < ADC_THRESHOLD) then
-				 -- flip logic to 'off'
+					-- flip logic to 'off'
 					LOGIC0 <=	'0';
 					led(0) <=  	'0';
 				else
@@ -61,7 +61,7 @@ begin
 			
 			elsif(iCH_count = "001") then
 				if(iADC_data < ADC_THRESHOLD) then
-				 -- flip logic to 'off'
+					-- flip logic to 'off'
 					LOGIC1 <=	'0';
 					led(1) <=  	'0';				
 				else

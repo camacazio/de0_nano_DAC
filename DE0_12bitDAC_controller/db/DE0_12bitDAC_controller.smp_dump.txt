@@ -14,6 +14,19 @@ dac_state.RESET 0 0 0
 dac_state.IDLE 0 1 1 
 dac_state.RUNNING 1 0 1 
 
+State Machine - |DE0_myfirstfpga|logic_processor:logic_controller|read_mode
+Name read_mode.NONE read_mode.DONE read_mode.READ_2 read_mode.READ_1 
+read_mode.READ_1 0 0 0 0 
+read_mode.READ_2 0 0 1 1 
+read_mode.DONE 0 1 0 1 
+read_mode.NONE 1 0 0 1 
+
+State Machine - |DE0_myfirstfpga|logic_processor:logic_controller|run_state
+Name run_state.RUNNING run_state.IDLE run_state.RESET 
+run_state.RESET 0 0 0 
+run_state.IDLE 0 1 1 
+run_state.RUNNING 1 0 1 
+
 State Machine - |DE0_myfirstfpga|FT245Comm:comm_inst|comm_state
 Name comm_state.RECEIVE comm_state.IDLE comm_state.RESET 
 comm_state.RESET 0 0 0 
