@@ -13,6 +13,7 @@ entity ADC_INTERLOCK is
 			iLOGIC_CLK		: in std_logic; -- clock rate
 			iADC_data		: in std_logic_vector(11 downto 0);
 			iCH_count		: in std_logic_vector(2 downto 0);
+			iActive			: in std_logic; -- toggles if we want the threshold trigger
 
 			oLED				: out std_logic_vector(1 downto 0);
 			oLOGIC0			: out std_logic;	-- '1' deactivates device
@@ -29,7 +30,8 @@ architecture rtl of ADC_INTERLOCK is
 	signal	LOGIC1		: std_logic := '1';					-- channel 1 value
 	signal	led			: std_logic_vector(1 downto 0);	-- lights for each channel	
 
-	-- threshold value, measured based on ADC values at 1/3, may need to be different for each channel
+	-- threshold value, measured based on ADC values at 1/3
+	-- might need to be different for each channel
 	constant ADC_THRESHOLD : std_logic_vector(11 downto 0) := "010101010101";
 
 	----------------------------------------------------------------------------------
@@ -38,8 +40,8 @@ architecture rtl of ADC_INTERLOCK is
 begin
 
 	-- latch outputs, "high" deactivates the physical device
-	oLOGIC0 	<=	not(LOGIC0);
-	oLOGIC1	<=	not(LOGIC1);
+	oLOGIC0 	<=	not(LOGIC0) when iActive = '1' else '0';
+	oLOGIC1	<=	not(LOGIC1) when iActive = '1' else '0';
 	oLED		<=	led; -- LEDs follow logic levels
 
 	-- Interpret ADC data for logic levels
@@ -48,10 +50,10 @@ begin
 
 		if(rising_edge(iLOGIC_CLK)) then
 		
-			-- update logic to be 'off' if the ADC data is below a threshold
+			-- update logic to be FALSE if the ADC data is below a threshold
 			if(iCH_count = "000") then
 				if(iADC_data < ADC_THRESHOLD) then
-					-- flip logic to 'off'
+					-- flip logic to FALSE
 					LOGIC0 <=	'0';
 					led(0) <=  	'0';
 				else
@@ -61,7 +63,7 @@ begin
 			
 			elsif(iCH_count = "001") then
 				if(iADC_data < ADC_THRESHOLD) then
-					-- flip logic to 'off'
+					-- flip logic to FALSE
 					LOGIC1 <=	'0';
 					led(1) <=  	'0';				
 				else

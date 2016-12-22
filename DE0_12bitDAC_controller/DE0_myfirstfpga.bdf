@@ -328,7 +328,7 @@ agreement for further details.
 )
 (pin
 	(output)
-	(rect 1288 224 1464 240)
+	(rect 1272 240 1448 256)
 	(text "OUTPUT" (rect 1 0 50 11)(font "Arial" (font_size 6)))
 	(text "LED[7..2]" (rect 90 0 164 14)(font "Arial" ))
 	(pt 0 8)
@@ -341,7 +341,7 @@ agreement for further details.
 		(line (pt 82 8)(pt 78 12))
 		(line (pt 78 12)(pt 82 8))
 	)
-	(annotation_block (location)(rect 1464 240 1544 272))
+	(annotation_block (location)(rect 1448 256 1528 288))
 )
 (symbol
 	(rect 1320 624 1552 768)
@@ -787,6 +787,13 @@ agreement for further details.
 		(line (pt 0 64)(pt 16 64)(line_width 3))
 	)
 	(port
+		(pt 0 80)
+		(input)
+		(text "iActive" (rect 0 0 57 14)(font "Arial" ))
+		(text "iActive" (rect 21 75 78 89)(font "Arial" ))
+		(line (pt 0 80)(pt 16 80))
+	)
+	(port
 		(pt 216 32)
 		(output)
 		(text "oLED[1..0]" (rect 0 0 82 14)(font "Arial" ))
@@ -1051,9 +1058,16 @@ agreement for further details.
 	(port
 		(pt 232 96)
 		(output)
+		(text "ADC_active" (rect 0 0 82 14)(font "Arial" ))
+		(text "ADC_active" (rect 142 91 211 105)(font "Arial" ))
+		(line (pt 232 96)(pt 216 96))
+	)
+	(port
+		(pt 232 112)
+		(output)
 		(text "oLED[5..0]" (rect 0 0 82 14)(font "Arial" ))
-		(text "oLED[5..0]" (rect 142 91 211 105)(font "Arial" ))
-		(line (pt 232 96)(pt 216 96)(line_width 3))
+		(text "oLED[5..0]" (rect 142 107 211 121)(font "Arial" ))
+		(line (pt 232 112)(pt 216 112)(line_width 3))
 	)
 	(drawing
 		(rectangle (rect 16 16 216 160))
@@ -1357,7 +1371,7 @@ agreement for further details.
 	(bus)
 )
 (connector
-	(text "chan1_wren" (rect 928 648 1010 662)(font "Arial" ))
+	(text "chan1_wren" (rect 920 648 1002 662)(font "Arial" ))
 	(pt 920 664)
 	(pt 984 664)
 )
@@ -1495,11 +1509,6 @@ agreement for further details.
 	(bus)
 )
 (connector
-	(text "logic_wren" (rect 928 0 1010 14)(font "Arial" ))
-	(pt 920 16)
-	(pt 1016 16)
-)
-(connector
 	(pt 1024 248)
 	(pt 1024 264)
 )
@@ -1606,21 +1615,6 @@ agreement for further details.
 	(pt 1296 216)
 )
 (connector
-	(pt 1256 216)
-	(pt 1280 216)
-	(bus)
-)
-(connector
-	(pt 1280 232)
-	(pt 1280 216)
-	(bus)
-)
-(connector
-	(pt 1280 232)
-	(pt 1288 232)
-	(bus)
-)
-(connector
 	(pt 320 504)
 	(pt 312 504)
 )
@@ -1661,6 +1655,39 @@ agreement for further details.
 	(text "clk_logic" (rect 1448 808 1522 822)(font "Arial" ))
 	(pt 1496 824)
 	(pt 1448 824)
+)
+(connector
+	(pt 1256 216)
+	(pt 1288 216)
+)
+(connector
+	(pt 1288 216)
+	(pt 1288 232)
+)
+(connector
+	(pt 1256 232)
+	(pt 1272 232)
+	(bus)
+)
+(connector
+	(pt 1272 232)
+	(pt 1272 248)
+	(bus)
+)
+(connector
+	(text "enable_ADC_logic" (rect 1296 216 1428 230)(font "Arial" ))
+	(pt 1288 232)
+	(pt 1376 232)
+)
+(connector
+	(text "enable_ADC_logic" (rect 1416 856 1548 870)(font "Arial" ))
+	(pt 1496 872)
+	(pt 1416 872)
+)
+(connector
+	(text "logic_wren" (rect 952 0 1034 14)(font "Arial" ))
+	(pt 1016 16)
+	(pt 944 16)
 )
 (junction (pt 312 152))
 (junction (pt 312 320))

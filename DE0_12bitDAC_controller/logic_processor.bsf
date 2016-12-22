@@ -104,9 +104,16 @@ agreement for further details.
 	(port
 		(pt 232 96)
 		(output)
+		(text "ADC_active" (rect 0 0 51 12)(font "Arial" ))
+		(text "ADC_active" (rect 160 91 211 103)(font "Arial" ))
+		(line (pt 232 96)(pt 216 96)(line_width 1))
+	)
+	(port
+		(pt 232 112)
+		(output)
 		(text "oLED[5..0]" (rect 0 0 44 12)(font "Arial" ))
-		(text "oLED[5..0]" (rect 167 91 211 103)(font "Arial" ))
-		(line (pt 232 96)(pt 216 96)(line_width 3))
+		(text "oLED[5..0]" (rect 167 107 211 119)(font "Arial" ))
+		(line (pt 232 112)(pt 216 112)(line_width 3))
 	)
 	(drawing
 		(rectangle (rect 16 16 216 160)(line_width 1))

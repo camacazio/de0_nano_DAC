@@ -46,6 +46,13 @@ agreement for further details.
 		(line (pt 0 64)(pt 16 64)(line_width 3))
 	)
 	(port
+		(pt 0 80)
+		(input)
+		(text "iActive" (rect 0 0 28 12)(font "Arial" ))
+		(text "iActive" (rect 21 75 49 87)(font "Arial" ))
+		(line (pt 0 80)(pt 16 80)(line_width 1))
+	)
+	(port
 		(pt 216 32)
 		(output)
 		(text "oLED[1..0]" (rect 0 0 43 12)(font "Arial" ))

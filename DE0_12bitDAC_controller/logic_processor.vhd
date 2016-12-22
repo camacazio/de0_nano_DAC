@@ -45,6 +45,9 @@ entity logic_processor is
 		iADC0_logic			: in std_logic;
 		iADC1_logic			: in std_logic;
 		
+		-- Logic to enable the ADC interlock
+		ADC_active			: out std_logic;
+		
 		-- LEDs to display logic states
 		oLED					: out std_logic_vector(5 downto 0)
 	);
@@ -198,6 +201,7 @@ begin
 				-- Output the logic vector
 				Logic			<= logic_step(3 downto 0);
 				DAC_trigger	<= logic_step(5 downto 4);
+				ADC_active	<= logic_step(6);
 							
 				if timing = '1' then
 					if duration <= READ_TIME then

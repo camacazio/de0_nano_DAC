@@ -10,10 +10,6 @@ Header file for defining a class for the USB-controlled FPGA waveform cards
 #include <wtypes.h> //needed for certain variable types in FTD2XX.H
 #include "FTD2XX.H" // Header file for USB controls and types
 
-// Parse by white space, listing serial numbers and number of dacs on that serial number
-// "Serial# #DACs Serial# #DACs ..."
-#define USB_DEVICE_LIST "DACBRD01 3 DACBRD02 3 DACBRD03 3 DACBRD04 3"
-
 // Waveform information
 #define USB_BYTE_RANGE 65535 // max number for positive values: unsigned 16-bit
 #define USB_MAX_VOLTAGE 10.0 // voltage value at USB_BYTE_RANGE
@@ -28,6 +24,11 @@ Header file for defining a class for the USB-controlled FPGA waveform cards
 #define LOG_UPDATE 0.0001 // all times should be in milliseconds
 #define MIN_LOGIC_TIME 0.0002 // set by the time to read in the next logic vector and duration (2 clock cycles)
 #define MAX_LOGIC_TIME 1677.72 // 1.67772 seconds, in milliseconds, per logic update step with overhead for op-codes
+
+// Definition for functions to upload data
+bool Logicstep(std::string waveformfile, unsigned devicenum, unsigned step);
+bool Waveform(std::string waveformfile, unsigned devicenum, unsigned channel, unsigned step);
+bool Run(unsigned devicenum, unsigned channel);
 
 // Some typedef's for the USB data vectors
 typedef	std::vector<BYTE> USBWVF_data;
@@ -87,7 +88,7 @@ public:
 
 //private:
 	// Fill out the data in a waveform as bytes derived from vectors sent from a waveform file
-	static bool WvfFill(unsigned channel, unsigned step, bool freerun,
+	static bool WvfFill(unsigned channel, unsigned step,
 		std::vector<double> vTimeVals, std::vector<double> vCurVals, std::vector<double> vdVVals);
 
 	// Fill out the data in a logic vector as bytes derived from vectors sent from a logic definition file
@@ -95,8 +96,8 @@ public:
 		std::vector<double> vTimeVals, std::vector<double> vLogicVals);
 
 	// Write a channel of data to a device
-	static bool WvfWrite(unsigned channel);
+	static bool Write(unsigned channel);
 
 	// Run the waveform on the device
-	static bool WvfRun(unsigned channel);
+	static bool Run(unsigned channel);
 };
