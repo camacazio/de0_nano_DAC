@@ -1,0 +1,14 @@
+Analysis & Synthesis Status : Successful - Wed Dec 28 08:24:56 2016
+Quartus Prime Version : 16.0.0 Build 211 04/27/2016 SJ Lite Edition
+Revision Name : DE0_myfirstfpga
+Top-level Entity Name : DE0_myfirstfpga
+Family : Cyclone IV E
+Total logic elements : 1,144
+    Total combinational functions : 994
+    Dedicated logic registers : 563
+Total registers : 563
+Total pins : 58
+Total virtual pins : 0
+Total memory bits : 540,672
+Embedded Multiplier 9-bit elements : 0
+Total PLLs : 3
