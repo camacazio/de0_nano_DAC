@@ -679,6 +679,10 @@ int main()
 							loading = FALSE;
 						}
 					}
+					else
+					{
+						loading = FALSE;
+					}
 				}
 				else
 				{
