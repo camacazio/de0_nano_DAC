@@ -1,5 +1,5 @@
 Flow report for DE0_myfirstfpga
-Wed Dec 28 08:25:27 2016
+Wed Jan 11 11:21:08 2017
 Quartus Prime Version 16.0.0 Build 211 04/27/2016 SJ Lite Edition
 
 
@@ -41,7 +41,7 @@ agreement for further details.
 +----------------------------------------------------------------------------------+
 ; Flow Summary                                                                     ;
 +------------------------------------+---------------------------------------------+
-; Flow Status                        ; Successful - Wed Dec 28 08:25:27 2016       ;
+; Flow Status                        ; Successful - Wed Jan 11 11:21:08 2017       ;
 ; Quartus Prime Version              ; 16.0.0 Build 211 04/27/2016 SJ Lite Edition ;
 ; Revision Name                      ; DE0_myfirstfpga                             ;
 ; Top-level Entity Name              ; DE0_myfirstfpga                             ;
@@ -65,7 +65,7 @@ agreement for further details.
 +-------------------+---------------------+
 ; Option            ; Setting             ;
 +-------------------+---------------------+
-; Start date & time ; 12/28/2016 08:24:37 ;
+; Start date & time ; 01/11/2017 11:20:20 ;
 ; Main task         ; Compilation         ;
 ; Revision Name     ; DE0_myfirstfpga     ;
 +-------------------+---------------------+
@@ -76,7 +76,7 @@ agreement for further details.
 +-------------------------------------+---------------------------------------+---------------+-------------+----------------+
 ; Assignment Name                     ; Value                                 ; Default Value ; Entity Name ; Section Id     ;
 +-------------------------------------+---------------------------------------+---------------+-------------+----------------+
-; COMPILER_SIGNATURE_ID               ; 203178705393201.148294227705164       ; --            ; --          ; --             ;
+; COMPILER_SIGNATURE_ID               ; 203178705393201.148416242000444       ; --            ; --          ; --             ;
 ; EDA_OUTPUT_DATA_FORMAT              ; Vhdl                                  ; --            ; --          ; eda_simulation ;
 ; EDA_SIMULATION_TOOL                 ; ModelSim-Altera (VHDL)                ; <None>        ; --          ; --             ;
 ; MAX_CORE_JUNCTION_TEMP              ; 85                                    ; --            ; --          ; --             ;
@@ -112,11 +112,11 @@ agreement for further details.
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
 ; Module Name               ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
-; Analysis & Synthesis      ; 00:00:18     ; 1.0                     ; 884 MB              ; 00:00:26                           ;
-; Fitter                    ; 00:00:15     ; 1.0                     ; 1136 MB             ; 00:00:11                           ;
-; Assembler                 ; 00:00:02     ; 1.0                     ; 743 MB              ; 00:00:01                           ;
-; TimeQuest Timing Analyzer ; 00:00:04     ; 1.0                     ; 832 MB              ; 00:00:03                           ;
-; EDA Netlist Writer        ; 00:00:02     ; 1.0                     ; 723 MB              ; 00:00:02                           ;
+; Analysis & Synthesis      ; 00:00:18     ; 1.0                     ; 881 MB              ; 00:00:27                           ;
+; Fitter                    ; 00:00:15     ; 1.0                     ; 1142 MB             ; 00:00:10                           ;
+; Assembler                 ; 00:00:02     ; 1.0                     ; 741 MB              ; 00:00:01                           ;
+; TimeQuest Timing Analyzer ; 00:00:03     ; 1.0                     ; 833 MB              ; 00:00:03                           ;
+; EDA Netlist Writer        ; 00:00:03     ; 1.0                     ; 723 MB              ; 00:00:02                           ;
 ; Total                     ; 00:00:41     ; --                      ; --                  ; 00:00:43                           ;
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
 

@@ -710,7 +710,7 @@ int main()
 		if (write) {
 			// Transmit waveform data
 			std::cout << "Transmit waveform data ( calling USB_Waveform_Manager::WvfWrite(...) )" << std::endl;
-			USB_Waveform_Manager::Write(channel);
+			USB_Waveform_Manager::Write(channel + 3 * device);
 			// clear the flag
 			write = FALSE;
 		}

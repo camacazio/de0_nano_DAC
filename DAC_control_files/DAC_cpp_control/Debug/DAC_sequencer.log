@@ -1,4 +1,4 @@
-﻿Build started 1/4/2017 11:24:42 AM.
+﻿Build started 1/10/2017 4:41:01 PM.
      1>Project "C:\Users\bowler\Documents\de0_nano_DAC\de0_nano_DAC\DAC_control_files\DAC_cpp_control\DAC_sequencer.vcxproj" on node 2 (Rebuild target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _MBCS /Gm- /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yc"stdafx.h" /Fp"Debug\DAC_sequencer.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt stdafx.cpp
@@ -14,4 +14,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.94
+Time Elapsed 00:00:05.98
